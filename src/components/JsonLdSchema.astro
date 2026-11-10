@@ -1,0 +1,101 @@
+---
+import { useTranslations, getLocalizedPath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  canonicalUrl: string;
+}
+
+const { lang, canonicalUrl } = Astro.props;
+const t = useTranslations(lang);
+const siteRoot = 'https://videotrimmer.github.io/';
+const localizedUrl = new URL(getLocalizedPath(lang), siteRoot).toString();
+
+// Strictly ZERO fake AggregateRating or review counts per Google Search Central compliance
+const jsonLdGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': `${siteRoot}#webapp`,
+      name: 'VideoTrimmer',
+      url: 'https://videotrimmer.github.io/',
+      inLanguage: lang,
+      applicationCategory: 'MultimediaApplication',
+      operatingSystem: 'All',
+      browserRequirements: 'Requires HTML5 Video and WebAssembly support',
+      description: t('meta.description'),
+      offers: {
+        '@type': 'Offer',
+        price: '0.00',
+        priceCurrency: 'USD',
+      },
+    },
+    {
+      '@type': 'HowTo',
+      '@id': `${canonicalUrl}#howto`,
+      name: t('howto.schemaName'),
+      description: t('meta.description'),
+      totalTime: 'PT5S',
+      step: [
+        {
+          '@type': 'HowToStep',
+          position: 1,
+          name: t('howto.step1Title'),
+          text: t('howto.step1Desc'),
+        },
+        {
+          '@type': 'HowToStep',
+          position: 2,
+          name: t('howto.step2Title'),
+          text: t('howto.step2Desc'),
+        },
+        {
+          '@type': 'HowToStep',
+          position: 3,
+          name: t('howto.step3Title'),
+          text: t('howto.step3Desc'),
+        },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${canonicalUrl}#faq`,
+      mainEntity: [1, 2, 3, 4, 5].map((num) => ({
+        '@type': 'Question',
+        name: t(`faq.q${num}`),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: t(`faq.a${num}`),
+        },
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: t('breadcrumb.home'),
+          item: localizedUrl,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: t('breadcrumb.tools'),
+          item: `${localizedUrl}#tools`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: t('breadcrumb.current'),
+          item: canonicalUrl,
+        },
+      ],
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLdGraph)} />

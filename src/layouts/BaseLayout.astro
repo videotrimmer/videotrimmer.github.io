@@ -1,0 +1,151 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import JsonLdSchema from '../components/JsonLdSchema.astro';
+import { languages, useTranslations, getLocalizedPath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+}
+
+const { lang, title, description } = Astro.props;
+const t = useTranslations(lang);
+
+const pageTitle = title || t('meta.title');
+const pageDesc = description || t('meta.description');
+const canonicalUrl = new URL(getLocalizedPath(lang), 'https://videotrimmer.github.io').toString();
+const ogImageUrl = 'https://videotrimmer.github.io/og-image.png';
+const currentOgLocale = languages[lang].locale;
+const alternateOgLocales = (Object.keys(languages) as Lang[])
+  .filter((code) => code !== lang)
+  .map((code) => languages[code].locale);
+---
+
+<!doctype html>
+<html lang={lang} dir={languages[lang].dir}>
+  <head>
+    <!-- Google Tag Manager (GTM-TSLL86XC) & Google Analytics 4 (G-TG9PGSXFHG) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtm.js?id=GTM-TSLL86XC"></script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-TG9PGSXFHG"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TG9PGSXFHG');
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <meta name="keywords" content={t('meta.keywords')} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Self-Referencing Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Explicit Sitemap Link for Google Search Console & Crawlers -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://videotrimmer.github.io/sitemap.xml" />
+
+    <!-- Hreflang Alternate Links for All 8 Languages + x-default -->
+    {
+      (Object.keys(languages) as Lang[]).map((code) => (
+        <link
+          rel="alternate"
+          hreflang={languages[code].hreflang}
+          href={new URL(getLocalizedPath(code), 'https://videotrimmer.github.io').toString()}
+        />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://videotrimmer.github.io/"
+    />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VideoTrimmer" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={pageTitle} />
+    <meta property="og:locale" content={currentOgLocale} />
+    {
+      alternateOgLocales.map((altLocale) => (
+        <meta property="og:locale:alternate" content={altLocale} />
+      ))
+    }
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Favicon & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#3A5465" />
+
+    <!-- Strict Zero-Fake-Rating JSON-LD Structured Data (WebApplication, HowTo, FAQPage, BreadcrumbList) -->
+    <JsonLdSchema lang={lang} canonicalUrl={canonicalUrl} />
+
+    <!-- Flash-Free Theme Initialization (Default Light Mode #F7FBF2) -->
+    <script is:inline>
+      (function () {
+        try {
+          const saved = localStorage.getItem('videotrimmer-theme');
+          if (saved === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body class="flex min-h-[100dvh] flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-[#D4ED9D] selection:text-[#3D3931]">
+    <Header lang={lang} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <!-- Register Offline-First PWA Service Worker -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              regs.forEach(function (reg) {
+                reg.unregister();
+              });
+            });
+            if (window.caches) {
+              caches.keys().then(function (keys) {
+                keys.forEach(function (k) {
+                  caches.delete(k);
+                });
+              });
+            }
+          } else {
+            navigator.serviceWorker
+              .register('/sw.js')
+              .then(function (reg) {
+                reg.update();
+              })
+              .catch(function () {});
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

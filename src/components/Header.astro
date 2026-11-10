@@ -1,0 +1,585 @@
+---
+import { languages, useTranslations, getLocalizedPath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const currentLangInfo = languages[lang];
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-50 w-full border-b-2 border-[#64A97B]/40 bg-[var(--bg-primary)]/95 backdrop-blur-md transition-colors duration-200"
+>
+  <div class="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <!-- 1. Brand Logo + Title -->
+    <a
+      href={getLocalizedPath(lang)}
+      aria-label={t('nav.brand')}
+      class="group flex items-center gap-3 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+    >
+      <div
+        class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl bg-[#3A5465] text-[#D4ED9D] shadow-md transition-transform duration-200 group-hover:scale-105 group-hover:bg-[#64A97B] group-hover:text-white"
+      >
+        <!-- Crisp Video Scissor / Film Frame SVG Icon -->
+        <svg
+          class="h-6 w-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2" y="4" width="20" height="16" rx="3" />
+          <path d="M10 4v16" stroke-dasharray="2 2" />
+          <path d="M14 4v16" stroke-dasharray="2 2" />
+          <path d="M6 9l3 3-3 3" />
+          <path d="M18 9l-3 3 3 3" />
+        </svg>
+      </div>
+      <span
+        class="text-xl sm:text-2xl font-extrabold tracking-tight text-[var(--text-primary)] transition-colors group-hover:text-[#64A97B]"
+      >
+        {t('nav.brand')}
+      </span>
+    </a>
+
+    <!-- Desktop Right Action Controls (Visible on lg >= 1024px) -->
+    <nav class="hidden lg:flex items-center gap-3" aria-label="Desktop Navigation">
+      <!-- 2. 8-Language Dropdown Selector -->
+      <div class="relative" id="lang-dropdown-wrapper">
+        <button
+          type="button"
+          id="lang-dropdown-btn"
+          aria-label={t('nav.languageAria')}
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] px-3.5 text-base font-bold text-[var(--text-primary)] shadow-sm transition-all hover:border-[#3A5465] hover:bg-[#D4ED9D]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+        >
+          <svg
+            class="h-5 w-5 shrink-0 text-[#3A5465] dark:text-[#D4ED9D]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M2 12h20" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          <span class="font-extrabold">{currentLangInfo.short}</span>
+          <span class="text-sm font-medium opacity-80">({currentLangInfo.name})</span>
+          <svg
+            class="h-4 w-4 opacity-75 transition-transform duration-200"
+            id="lang-chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          id="lang-dropdown-menu"
+          role="menu"
+          aria-label={t('nav.languageAria')}
+          class="invisible absolute right-0 mt-2 w-56 origin-top-right scale-95 rounded-2xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] p-2 opacity-0 shadow-2xl transition-all duration-150 z-50"
+        >
+          <div class="grid grid-cols-1 gap-1">
+            {
+              Object.entries(languages).map(([code, info]) => {
+                const isActive = code === lang;
+                return (
+                  <a
+                    href={getLocalizedPath(code as Lang)}
+                    role="menuitem"
+                    class:list={[
+                      'flex items-center justify-between rounded-xl px-3.5 py-2.5 text-base font-bold transition-colors',
+                      isActive
+                        ? 'bg-[#3A5465] text-white dark:bg-[#D4ED9D] dark:text-[#3D3931]'
+                        : 'text-[var(--text-primary)] hover:bg-[#D4ED9D]/50 dark:hover:bg-[#3A5465]/60',
+                    ]}
+                  >
+                    <span>{info.name}</span>
+                    <span
+                      class:list={[
+                        'rounded-md px-2 py-0.5 text-xs font-extrabold uppercase',
+                        isActive
+                          ? 'bg-[#64A97B] text-white dark:bg-[#3D3931] dark:text-[#D4ED9D]'
+                          : 'bg-[#D4ED9D] text-[#3D3931] dark:bg-[#3D3931] dark:text-[#D4ED9D]',
+                      ]}
+                    >
+                      {info.short}
+                    </span>
+                  </a>
+                );
+              })
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Light/Dark Mode Toggle Button -->
+      <button
+        type="button"
+        aria-label={t('nav.themeAria')}
+        title={t('nav.themeAria')}
+        class="theme-toggle-trigger flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] text-[var(--text-primary)] shadow-sm transition-all hover:border-[#3A5465] hover:bg-[#D4ED9D]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+      >
+        <svg
+          class="theme-icon-sun hidden h-5 w-5 text-[#D4ED9D]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg
+          class="theme-icon-moon h-5 w-5 text-[#3A5465]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+
+      <!-- 4. Install PWA Button ('Add to Home Screen') -->
+      <button
+        type="button"
+        aria-label={t('nav.installPwaAria')}
+        data-install-msg={t('nav.pwaInstalledMsg')}
+        class="install-pwa-trigger flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-[#64A97B] bg-[#D4ED9D]/60 dark:bg-[#3D3931] px-4 text-sm font-bold text-[#3D3931] dark:text-[#F7FBF2] shadow-sm transition-all hover:bg-[#64A97B] hover:text-white dark:hover:bg-[#64A97B] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+      >
+        <svg
+          class="h-5 w-5 shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+          <line x1="12" y1="18" x2="12.01" y2="18" />
+          <path d="M12 7v6" />
+          <path d="M9 10l3 3 3-3" />
+        </svg>
+        <span class="whitespace-nowrap font-bold">{t('nav.installPwa')}</span>
+      </button>
+
+      <!-- 5. Git Repo Link (Icon Only) -->
+      <a
+        href="https://github.com/videotrimmer/videotrimmer.github.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Git Repository"
+        title="Git Repository"
+        class="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] text-[var(--text-primary)] shadow-sm transition-all hover:border-[#3A5465] hover:bg-[#D4ED9D]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+      >
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
+
+      <!-- 6. CTA Button: 'Support the Developer' -->
+      <a
+        href="https://kisharadilshan.gumroad.com/coffee"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t('nav.supportAria')}
+        class="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#64A97B] px-4 text-sm font-extrabold text-[#FFFFFF] shadow-md transition-all duration-200 hover:bg-[#3A5465] hover:shadow-[0_0_20px_rgba(58,84,101,0.65)] hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3A5465]"
+      >
+        <svg
+          class="h-5 w-5 shrink-0 text-[#FFFFFF]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+          <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
+          <path d="M8 12.5c0-1.1.9-2 2-2s2 .9 2 2c0 1.5-2 3-2 3s-2-1.5-2-3Z" fill="currentColor" stroke="none" />
+          <line x1="6" y1="2" x2="6" y2="4" />
+          <line x1="10" y1="2" x2="10" y2="4" />
+          <line x1="14" y1="2" x2="14" y2="4" />
+        </svg>
+        <span class="whitespace-nowrap font-extrabold text-[#FFFFFF]">{t('nav.supportCta')}</span>
+      </a>
+    </nav>
+
+    <!-- Mobile & Tablet Visible Git Repo + Toggle Button (Visible on < 1024px) -->
+    <div class="flex items-center gap-2 lg:hidden">
+      <a
+        href="https://github.com/videotrimmer/videotrimmer.github.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Git Repository"
+        title="Git Repository"
+        class="flex h-12 w-12 min-h-[48px] min-w-[48px] items-center justify-center rounded-xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] text-[var(--text-primary)] shadow-sm transition-all hover:border-[#3A5465] hover:bg-[#D4ED9D]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+      >
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
+
+      <button
+        type="button"
+        id="mobile-menu-toggle-btn"
+        aria-label="Toggle Navigation Menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav-drawer"
+        class="flex h-12 w-12 min-h-[48px] min-w-[48px] items-center justify-center rounded-xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] text-[var(--text-primary)] shadow-sm transition-all hover:border-[#3A5465] hover:bg-[#D4ED9D]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+      >
+        <!-- Hamburger Icon -->
+        <svg
+          id="mobile-menu-icon-open"
+          class="h-6 w-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+        <!-- Close X Icon -->
+        <svg
+          id="mobile-menu-icon-close"
+          class="hidden h-6 w-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Collapsible Mobile & Tablet Navigation Drawer (< 1024px) -->
+  <div
+    id="mobile-nav-drawer"
+    class="hidden lg:hidden border-t-2 border-[#64A97B]/40 bg-[var(--workspace-box-bg)] px-4 py-4 shadow-xl"
+  >
+    <div class="mx-auto max-w-xl space-y-4">
+      <!-- Quick Actions: Theme Toggle + Install App -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <button
+          type="button"
+          aria-label={t('nav.themeAria')}
+          class="theme-toggle-trigger flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-[#64A97B] bg-[var(--card-subtle-bg)] px-3 text-sm font-extrabold text-[var(--text-primary)] shadow-sm transition-all hover:bg-[#D4ED9D]/40"
+        >
+          <svg
+            class="theme-icon-sun hidden h-5 w-5 text-[#D4ED9D]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg
+            class="theme-icon-moon h-5 w-5 text-[#3A5465]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <span class="truncate">{t('nav.themeAria')}</span>
+        </button>
+
+        <button
+          type="button"
+          aria-label={t('nav.installPwaAria')}
+          data-install-msg={t('nav.pwaInstalledMsg')}
+          class="install-pwa-trigger flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-[#64A97B] bg-[#D4ED9D]/60 dark:bg-[#3D3931] px-3 text-sm font-extrabold text-[#3D3931] dark:text-[#F7FBF2] shadow-sm transition-all hover:bg-[#64A97B] hover:text-white"
+        >
+          <svg
+            class="h-5 w-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+            <line x1="12" y1="18" x2="12.01" y2="18" />
+            <path d="M12 7v6" />
+            <path d="M9 10l3 3 3-3" />
+          </svg>
+          <span class="truncate">{t('nav.installPwa')}</span>
+        </button>
+      </div>
+
+      <!-- Support the Developer CTA -->
+      <a
+        href="https://kisharadilshan.gumroad.com/coffee"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t('nav.supportAria')}
+        class="flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-[#64A97B] px-4 text-base font-extrabold text-[#FFFFFF] shadow-md transition-all hover:bg-[#3A5465]"
+      >
+        <svg
+          class="h-5 w-5 shrink-0 text-[#FFFFFF]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+          <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
+          <path d="M8 12.5c0-1.1.9-2 2-2s2 .9 2 2c0 1.5-2 3-2 3s-2-1.5-2-3Z" fill="currentColor" stroke="none" />
+          <line x1="6" y1="2" x2="6" y2="4" />
+          <line x1="10" y1="2" x2="10" y2="4" />
+          <line x1="14" y1="2" x2="14" y2="4" />
+        </svg>
+        <span>{t('nav.supportCta')}</span>
+      </a>
+
+      <!-- 8-Language Selector Grid -->
+      <div class="pt-1">
+        <p class="mb-2 text-xs font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
+          {t('nav.languageAria')}
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {
+            Object.entries(languages).map(([code, info]) => {
+              const isActive = code === lang;
+              return (
+                <a
+                  href={getLocalizedPath(code as Lang)}
+                  class:list={[
+                    'flex items-center justify-between rounded-xl border px-3 py-2 text-sm font-bold transition-colors',
+                    isActive
+                      ? 'border-[#3A5465] bg-[#3A5465] text-white dark:border-[#D4ED9D] dark:bg-[#D4ED9D] dark:text-[#3D3931]'
+                      : 'border-[#64A97B]/60 bg-[var(--card-subtle-bg)] text-[var(--text-primary)] hover:bg-[#D4ED9D]/40',
+                  ]}
+                >
+                  <span class="truncate">{info.name}</span>
+                  <span class="ml-1.5 rounded px-1.5 py-0.5 text-[11px] font-extrabold uppercase opacity-90">
+                    {info.short}
+                  </span>
+                </a>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtle PWA Notification Toast -->
+  <div
+    id="pwa-toast"
+    role="status"
+    aria-live="polite"
+    class="pointer-events-none fixed bottom-5 right-5 z-50 max-w-sm translate-y-6 rounded-2xl border-2 border-[#64A97B] bg-[#3A5465] px-5 py-3.5 text-sm font-bold text-white opacity-0 shadow-2xl transition-all duration-300"
+  >
+    <span id="pwa-toast-text"></span>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    const htmlEl = document.documentElement;
+    const themeBtns = document.querySelectorAll('.theme-toggle-trigger');
+    const sunIcons = document.querySelectorAll('.theme-icon-sun');
+    const moonIcons = document.querySelectorAll('.theme-icon-moon');
+
+    function syncThemeIcons() {
+      const isDark = htmlEl.classList.contains('dark');
+      sunIcons.forEach((el) => el.classList.toggle('hidden', !isDark));
+      moonIcons.forEach((el) => el.classList.toggle('hidden', isDark));
+    }
+
+    syncThemeIcons();
+
+    themeBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        htmlEl.classList.toggle('dark');
+        const isDark = htmlEl.classList.contains('dark');
+        try {
+          localStorage.setItem('videotrimmer-theme', isDark ? 'dark' : 'light');
+        } catch (_) {}
+        syncThemeIcons();
+      });
+    });
+
+    // Mobile & Tablet Drawer Toggle Logic
+    const mobileToggleBtn = document.getElementById('mobile-menu-toggle-btn');
+    const mobileDrawer = document.getElementById('mobile-nav-drawer');
+    const mobileIconOpen = document.getElementById('mobile-menu-icon-open');
+    const mobileIconClose = document.getElementById('mobile-menu-icon-close');
+    const siteHeader = document.getElementById('site-header');
+
+    function closeMobileMenu() {
+      mobileDrawer?.classList.add('hidden');
+      mobileIconOpen?.classList.remove('hidden');
+      mobileIconClose?.classList.add('hidden');
+      mobileToggleBtn?.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleMobileMenu() {
+      const isExpanded = mobileToggleBtn?.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        closeMobileMenu();
+      } else {
+        mobileDrawer?.classList.remove('hidden');
+        mobileIconOpen?.classList.add('hidden');
+        mobileIconClose?.classList.remove('hidden');
+        mobileToggleBtn?.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    mobileToggleBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobileMenu();
+    });
+
+    // Desktop Language dropdown logic
+    const langBtn = document.getElementById('lang-dropdown-btn');
+    const langMenu = document.getElementById('lang-dropdown-menu');
+    const langWrapper = document.getElementById('lang-dropdown-wrapper');
+    const langChevron = document.getElementById('lang-chevron');
+
+    function closeLangMenu() {
+      langMenu?.classList.add('invisible', 'opacity-0', 'scale-95');
+      langMenu?.classList.remove('visible', 'opacity-100', 'scale-100');
+      langChevron?.classList.remove('rotate-180');
+      langBtn?.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleLangMenu() {
+      const isExpanded = langBtn?.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        closeLangMenu();
+      } else {
+        langMenu?.classList.remove('invisible', 'opacity-0', 'scale-95');
+        langMenu?.classList.add('visible', 'opacity-100', 'scale-100');
+        langChevron?.classList.add('rotate-180');
+        langBtn?.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    langBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleLangMenu();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (langWrapper && !langWrapper.contains(e.target)) {
+        closeLangMenu();
+      }
+      if (siteHeader && !siteHeader.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLangMenu();
+        closeMobileMenu();
+      }
+    });
+
+    // PWA Install Prompt Logic
+    let deferredPwaPrompt = null;
+    const installBtns = document.querySelectorAll('.install-pwa-trigger');
+    const pwaToast = document.getElementById('pwa-toast');
+    const pwaToastText = document.getElementById('pwa-toast-text');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+    });
+
+    function showPwaToast(msg) {
+      if (!pwaToast || !pwaToastText) return;
+      pwaToastText.textContent = msg;
+      pwaToast.classList.remove('opacity-0', 'translate-y-6');
+      pwaToast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        pwaToast.classList.remove('opacity-100', 'translate-y-0');
+        pwaToast.classList.add('opacity-0', 'translate-y-6');
+      }, 4200);
+    }
+
+    installBtns.forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (deferredPwaPrompt) {
+          deferredPwaPrompt.prompt();
+          await deferredPwaPrompt.userChoice;
+          deferredPwaPrompt = null;
+        } else {
+          const msg = btn.getAttribute('data-install-msg') || 'Use your browser menu to Add to Home Screen.';
+          showPwaToast(msg);
+        }
+      });
+    });
+  })();
+</script>

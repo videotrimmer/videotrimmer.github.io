@@ -1,0 +1,66 @@
+---
+import { languages, useTranslations, getLocalizedPath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t-2 border-[#64A97B]/40 bg-[var(--workspace-box-bg)] py-10">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-6">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#3A5465] text-[#D4ED9D]">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="3" />
+            <path d="M10 4v16" stroke-dasharray="2 2" />
+            <path d="M14 4v16" stroke-dasharray="2 2" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-lg font-extrabold text-[var(--text-primary)]">{t('nav.brand')}</p>
+          <p class="text-xs font-semibold text-[var(--text-secondary)]">{t('footer.tagline')}</p>
+        </div>
+      </div>
+
+      <!-- Language Quick Links & Git Repo Icon -->
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        {
+          Object.entries(languages).map(([code, info]) => (
+            <a
+              href={getLocalizedPath(code as Lang)}
+              class:list={[
+                'rounded-lg px-2.5 py-1 text-xs font-bold transition',
+                code === lang
+                  ? 'bg-[#3A5465] text-white dark:bg-[#D4ED9D] dark:text-[#3D3931]'
+                  : 'bg-[#D4ED9D]/40 text-[var(--text-primary)] hover:bg-[#64A97B] hover:text-white',
+              ]}
+            >
+              {info.name}
+            </a>
+          ))
+        }
+        <a
+          href="https://github.com/videotrimmer/videotrimmer.github.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Git Repository"
+          title="Git Repository"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#64A97B]/60 bg-[#D4ED9D]/30 text-[var(--text-primary)] transition hover:border-[#3A5465] hover:bg-[#64A97B] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+        >
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="border-t border-[#64A97B]/20 pt-4 text-center text-xs font-medium text-[var(--text-secondary)]">
+      © {year} VideoTrimmer (videotrimmer.github.io). {t('footer.rights')}
+    </div>
+  </div>
+</footer>

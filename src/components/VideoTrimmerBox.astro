@@ -1,0 +1,2335 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section
+  class="first-fold-hero mx-auto w-full max-w-6xl px-3 py-4 sm:px-6 sm:py-6 lg:px-8"
+  aria-labelledby="hero-primary-h1"
+>
+  <!-- Primary H1 -->
+  <div class="mb-4 text-center sm:mb-5">
+    <h1
+      id="hero-primary-h1"
+      class="font-extrabold tracking-tight text-[var(--text-primary)]"
+    >
+      {t('hero.h1')}
+    </h1>
+  </div>
+
+  <!-- Interactive Trimmer Box Div -->
+  <div
+    id="video-trimmer-workspace"
+    class="relative rounded-3xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] p-4 sm:p-6 lg:p-7 shadow-workspace dark:shadow-workspace-dark transition-all duration-300"
+    data-i18n-lossless-status={t('progress.losslessStatus')}
+    data-i18n-precision-status={t('progress.precisionStatus')}
+    data-i18n-audio-status={t('progress.audioStatus')}
+    data-i18n-loading-engine={t('progress.loadingEngine')}
+    data-i18n-original={t('result.originalLabel')}
+    data-i18n-trimmed={t('result.trimmedLabel')}
+    data-i18n-zero-loss={t('result.zeroLossBadge')}
+    data-i18n-play={t('controls.playSelection')}
+    data-i18n-pause={t('controls.pause')}
+    data-i18n-trim-btn={t('controls.trimActionBtn')}
+    data-i18n-cut-btn={t('controls.cutMiddleActionBtn')}
+    data-i18n-extract-btn={t('controls.extractActionBtn')}
+    data-i18n-dl-video={t('result.downloadVideoBtn')}
+    data-i18n-dl-audio={t('result.downloadAudioBtn')}
+    data-i18n-keep-label={t('controls.timelineKeepLabel')}
+    data-i18n-remove-label={t('controls.timelineRemoveMiddleLabel')}
+    data-i18n-mode-trim-desc={t('mode.trimVideoDesc')}
+    data-i18n-mode-cut-desc={t('mode.cutMiddleDesc')}
+    data-i18n-mode-mobile-desc={t('mode.mobileVideoDesc')}
+    data-i18n-mode-audio-desc={t('mode.trimAudioDesc')}
+    data-i18n-mode-extract-desc={t('mode.extractMp3Desc')}
+  >
+    <!-- Collapsible Mode Presets Bar -->
+    <div class="mb-4">
+      <div class="flex items-center justify-center">
+        <button
+          type="button"
+          id="mode-presets-toggle-btn"
+          aria-expanded="false"
+          aria-controls="mode-presets-collapse-panel"
+          class="inline-flex items-center gap-2.5 rounded-2xl border-2 border-[#64A97B] bg-[var(--card-subtle-bg)] px-4 py-2 text-sm sm:text-base font-extrabold text-[var(--text-primary)] shadow-sm transition-all duration-200 hover:border-[#3A5465] hover:bg-[#D4ED9D]/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+        >
+          <svg class="h-4 w-4 shrink-0 text-[#3A5465] dark:text-[#D4ED9D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="6" cy="6" r="3" />
+            <circle cx="6" cy="18" r="3" />
+            <line x1="20" y1="4" x2="8.12" y2="15.88" />
+            <line x1="14.47" y1="14.48" x2="20" y2="20" />
+            <line x1="8.12" y1="8.12" x2="12" y2="12" />
+          </svg>
+          <span id="active-mode-label-text">{t('mode.trimVideo')}</span>
+          <svg
+            id="mode-presets-chevron"
+            class="h-4 w-4 shrink-0 text-[#3A5465] transition-transform duration-200 dark:text-[#D4ED9D]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Hidden by default: Mode Selector Pills + Active Mode Description -->
+      <div
+        id="mode-presets-collapse-panel"
+        class="hidden mt-3 rounded-2xl border-2 border-[#64A97B]/40 bg-[var(--card-subtle-bg)] p-3.5 transition-all"
+      >
+        <div
+          role="tablist"
+          aria-label="Video Trimmer Modes"
+          class="flex flex-wrap items-center justify-center gap-2"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected="true"
+            data-mode="trim-video"
+            class="mode-pill active-mode flex items-center gap-2 rounded-2xl border-2 border-[#3A5465] bg-[#3A5465] px-4 py-2 text-sm font-extrabold text-white shadow-md transition-all duration-200 hover:bg-[#64A97B] dark:border-[#D4ED9D] dark:bg-[#D4ED9D] dark:text-[#3D3931]"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="6" cy="6" r="3" />
+              <circle cx="6" cy="18" r="3" />
+              <line x1="20" y1="4" x2="8.12" y2="15.88" />
+              <line x1="14.47" y1="14.48" x2="20" y2="20" />
+              <line x1="8.12" y1="8.12" x2="12" y2="12" />
+            </svg>
+            <span>{t('mode.trimVideo')}</span>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-mode="cut-middle"
+            class="mode-pill flex items-center gap-2 rounded-2xl border-2 border-[#64A97B] bg-[#F7FBF2] px-4 py-2 text-sm font-bold text-[#3D3931] transition-all duration-200 hover:border-[#3A5465] hover:bg-[#D4ED9D]/60 dark:bg-[#3D3931] dark:text-[#F7FBF2] dark:hover:bg-[#64A97B]/40"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="5" width="6" height="14" rx="1.5" />
+              <rect x="16" y="5" width="6" height="14" rx="1.5" />
+              <path d="M10 9l4 6M14 9l-4 6" />
+            </svg>
+            <span>{t('mode.cutMiddle')}</span>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-mode="mobile-video"
+            class="mode-pill flex items-center gap-2 rounded-2xl border-2 border-[#64A97B] bg-[#F7FBF2] px-4 py-2 text-sm font-bold text-[#3D3931] transition-all duration-200 hover:border-[#3A5465] hover:bg-[#D4ED9D]/60 dark:bg-[#3D3931] dark:text-[#F7FBF2] dark:hover:bg-[#64A97B]/40"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="6" y="2" width="12" height="20" rx="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg>
+            <span>{t('mode.mobileVideo')}</span>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-mode="trim-audio"
+            class="mode-pill flex items-center gap-2 rounded-2xl border-2 border-[#64A97B] bg-[#F7FBF2] px-4 py-2 text-sm font-bold text-[#3D3931] transition-all duration-200 hover:border-[#3A5465] hover:bg-[#D4ED9D]/60 dark:bg-[#3D3931] dark:text-[#F7FBF2] dark:hover:bg-[#64A97B]/40"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 10v3" />
+              <path d="M6 6v11" />
+              <path d="M10 3v18" />
+              <path d="M14 8v7" />
+              <path d="M18 5v13" />
+              <path d="M22 10v3" />
+            </svg>
+            <span>{t('mode.trimAudio')}</span>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-mode="extract-mp3"
+            class="mode-pill flex items-center gap-2 rounded-2xl border-2 border-[#64A97B] bg-[#F7FBF2] px-4 py-2 text-sm font-bold text-[#3D3931] transition-all duration-200 hover:border-[#3A5465] hover:bg-[#D4ED9D]/60 dark:bg-[#3D3931] dark:text-[#F7FBF2] dark:hover:bg-[#64A97B]/40"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18V5l12-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="18" cy="16" r="3" />
+            </svg>
+            <span>{t('mode.extractMp3')}</span>
+          </button>
+        </div>
+
+        <!-- Active Mode Helper Description -->
+        <p
+          id="active-mode-description"
+          class="mt-2.5 text-center text-xs sm:text-sm font-semibold text-[var(--text-secondary)]"
+        >
+          {t('mode.trimVideoDesc')}
+        </p>
+      </div>
+    </div>
+
+    <!-- Hidden File Input (Supports Batch Selection) -->
+    <input
+      type="file"
+      id="trimmer-file-input"
+      multiple
+      accept="video/*,audio/*,.mp4,.mov,.webm,.mkv,.avi,.m4v,.mp3,.wav,.m4a,.ogg,.flac,.aac"
+      class="sr-only"
+    />
+
+    <!-- ==========================================
+         STEP 1: GIANT DROPZONE
+         ========================================== -->
+    <div
+      id="step-1-dropzone"
+      class="float-smooth group relative flex flex-col items-center justify-center rounded-3xl border-[3px] border-dashed border-[#64A97B] bg-[var(--dropzone-bg)] px-5 py-8 sm:py-12 text-center transition-all duration-300 hover:border-[#3A5465] hover:bg-[var(--dropzone-hover-bg)] cursor-pointer"
+    >
+      <!-- Highlight Pill Badge -->
+      <div
+        class="mb-4 inline-flex items-center gap-2 rounded-full border border-[#64A97B] bg-[#D4ED9D] px-4 py-1.5 text-xs sm:text-sm font-extrabold text-[#3D3931] shadow-sm dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+      >
+        <svg class="h-4 w-4 text-[#3A5465] dark:text-[#D4ED9D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+        <span>{t('dropzone.badge')}</span>
+      </div>
+
+      <!-- Oversized 64x64px SVG Icon -->
+      <div
+        class="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-[#D4ED9D] text-[#3A5465] shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#64A97B] group-hover:text-white dark:bg-[#3A5465] dark:text-[#D4ED9D]"
+      >
+        <svg
+          class="h-14 w-14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2" y="3" width="20" height="14" rx="2.5" />
+          <path d="M10 8l5 3-5 3V8z" fill="currentColor" />
+          <path d="M4 21h16" />
+          <path d="M8 19v2" />
+          <path d="M16 19v2" />
+          <path d="M12 18v3" />
+        </svg>
+      </div>
+
+      <h2 class="mb-2 text-xl sm:text-2xl lg:text-3xl font-extrabold text-[var(--text-primary)]">
+        {t('dropzone.title')}
+      </h2>
+      <p class="mb-6 max-w-2xl text-base sm:text-lg font-medium text-[var(--text-secondary)]">
+        {t('dropzone.subtitle')}
+      </p>
+
+      <!-- Action Button Row -->
+      <div class="flex flex-wrap items-center justify-center">
+        <button
+          type="button"
+          id="select-video-btn"
+          class="inline-flex items-center gap-3 rounded-2xl bg-[#3A5465] px-8 py-4 text-lg sm:text-xl font-extrabold text-white shadow-btn transition-all duration-200 hover:bg-[#64A97B] hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#64A97B] dark:bg-[#D4ED9D] dark:text-[#3D3931] dark:hover:bg-[#64A97B] dark:hover:text-white"
+        >
+          <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <span>{t('dropzone.selectBtn')}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         STEP 2: VISUAL TIMELINE CONTROLS & PRESETS
+         ========================================== -->
+    <div id="step-2-controls" class="hidden space-y-5">
+      <!-- Top Loaded Files / Batch Queue Bar -->
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-[#64A97B]/50 bg-[var(--card-subtle-bg)] px-4 py-2.5"
+      >
+        <div class="flex flex-wrap items-center gap-2" id="batch-file-pills">
+          <!-- Populated dynamically with file pills -->
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="add-more-files-btn"
+            class="rounded-xl border border-[#64A97B] bg-[#D4ED9D]/60 px-3 py-1.5 text-sm font-bold text-[#3D3931] transition hover:bg-[#64A97B] hover:text-white dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+          >
+            {t('controls.addMoreFiles')}
+          </button>
+          <button
+            type="button"
+            id="replace-file-btn"
+            class="rounded-xl border border-[#3A5465] bg-[#3A5465] px-3 py-1.5 text-sm font-bold text-white transition hover:bg-[#64A97B] dark:bg-[#D4ED9D] dark:text-[#3D3931]"
+          >
+            {t('controls.changeFile')}
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Video Player + Quick Playback Bar -->
+      <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <!-- Left 7 cols: Live HTML5 Video Player -->
+        <div class="lg:col-span-7 flex flex-col justify-between rounded-2xl border-2 border-[#64A97B] bg-[#182229] p-3 shadow-inner">
+          <div class="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl bg-black">
+            <video
+              id="source-video-player"
+              class="max-h-[340px] w-full object-contain"
+              playsinline
+              preload="metadata"
+            ></video>
+
+            <!-- Audio-Only Visualizer Overlay (shown when trimming MP3/WAV) -->
+            <div
+              id="audio-only-overlay"
+              class="hidden absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#3A5465] to-[#23211C] text-[#D4ED9D] p-6"
+            >
+              <svg class="h-16 w-16 mb-3 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13" />
+                <circle cx="6" cy="18" r="3" />
+                <circle cx="18" cy="16" r="3" />
+              </svg>
+              <p id="audio-file-title" class="text-lg font-extrabold text-white truncate max-w-md"></p>
+            </div>
+
+            <!-- Live Timecode Floating Pill -->
+            <div
+              class="pointer-events-none absolute top-3 right-3 rounded-lg bg-[#3D3931]/90 border border-[#64A97B] px-3 py-1 font-mono text-sm font-bold text-[#D4ED9D]"
+            >
+              <span id="live-playhead-readout">00:00.0</span> / <span id="total-duration-readout">00:00.0</span>
+            </div>
+          </div>
+
+          <!-- Player Transport Controls -->
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-2 px-1">
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                id="play-selection-btn"
+                class="inline-flex items-center gap-2 rounded-xl bg-[#64A97B] px-4 py-2 text-sm sm:text-base font-extrabold text-white shadow transition hover:bg-[#D4ED9D] hover:text-[#3D3931]"
+              >
+                <svg id="play-icon-svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+                <span id="play-selection-label">{t('controls.playSelection')}</span>
+              </button>
+
+              <label class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[#64A97B]/60 bg-[#2C3E4A] px-3 py-2 text-xs sm:text-sm font-bold text-[#F7FBF2]">
+                <input
+                  type="checkbox"
+                  id="loop-selection-checkbox"
+                  checked
+                  class="h-4 w-4 accent-[#D4ED9D] rounded"
+                />
+                <span>{t('controls.loopToggle')}</span>
+              </label>
+            </div>
+
+            <button
+              type="button"
+              id="reset-range-btn"
+              class="rounded-xl border border-[#64A97B]/60 bg-[#2C3E4A] px-3 py-2 text-xs sm:text-sm font-bold text-[#D4ED9D] transition hover:bg-[#64A97B] hover:text-white"
+            >
+              {t('controls.resetRange')}
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 5 cols: Exact Timecode Inputs & Fine-Tune Nudge Controls -->
+        <div class="lg:col-span-5 flex flex-col justify-between rounded-2xl border-2 border-[#64A97B] bg-[var(--card-subtle-bg)] p-4">
+          <div class="space-y-4">
+            <!-- Start Time Box -->
+            <div class="rounded-xl border-2 border-[#64A97B]/60 bg-[var(--workspace-box-bg)] p-3">
+              <div class="mb-1.5 flex items-center justify-between">
+                <label for="start-time-input" class="text-sm font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
+                  {t('controls.startTime')} (00:00.0)
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    id="nudge-start-minus"
+                    aria-label={`${t('controls.startTime')} ${t('controls.nudgeMinus')}`}
+                    class="rounded-lg border border-[#64A97B] bg-[#D4ED9D]/60 px-2.5 py-1 font-mono text-xs font-extrabold text-[#3D3931] transition hover:bg-[#64A97B] hover:text-white dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+                  >
+                    {t('controls.nudgeMinus')}
+                  </button>
+                  <button
+                    type="button"
+                    id="nudge-start-plus"
+                    aria-label={`${t('controls.startTime')} ${t('controls.nudgePlus')}`}
+                    class="rounded-lg border border-[#64A97B] bg-[#D4ED9D]/60 px-2.5 py-1 font-mono text-xs font-extrabold text-[#3D3931] transition hover:bg-[#64A97B] hover:text-white dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+                  >
+                    {t('controls.nudgePlus')}
+                  </button>
+                </div>
+              </div>
+              <input
+                type="text"
+                id="start-time-input"
+                value="00:00.0"
+                aria-label={t('controls.startTime')}
+                class="w-full rounded-xl border-2 border-[#64A97B]/50 bg-[var(--bg-primary)] px-3.5 py-2 font-mono text-xl font-extrabold text-[var(--text-primary)] focus:border-[#3A5465] focus:outline-none"
+              />
+            </div>
+
+            <!-- End Time Box -->
+            <div class="rounded-xl border-2 border-[#64A97B]/60 bg-[var(--workspace-box-bg)] p-3">
+              <div class="mb-1.5 flex items-center justify-between">
+                <label for="end-time-input" class="text-sm font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
+                  {t('controls.endTime')} (00:00.0)
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    id="nudge-end-minus"
+                    aria-label={`${t('controls.endTime')} ${t('controls.nudgeMinus')}`}
+                    class="rounded-lg border border-[#64A97B] bg-[#D4ED9D]/60 px-2.5 py-1 font-mono text-xs font-extrabold text-[#3D3931] transition hover:bg-[#64A97B] hover:text-white dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+                  >
+                    {t('controls.nudgeMinus')}
+                  </button>
+                  <button
+                    type="button"
+                    id="nudge-end-plus"
+                    aria-label={`${t('controls.endTime')} ${t('controls.nudgePlus')}`}
+                    class="rounded-lg border border-[#64A97B] bg-[#D4ED9D]/60 px-2.5 py-1 font-mono text-xs font-extrabold text-[#3D3931] transition hover:bg-[#64A97B] hover:text-white dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+                  >
+                    {t('controls.nudgePlus')}
+                  </button>
+                </div>
+              </div>
+              <input
+                type="text"
+                id="end-time-input"
+                value="00:10.0"
+                aria-label={t('controls.endTime')}
+                class="w-full rounded-xl border-2 border-[#64A97B]/50 bg-[var(--bg-primary)] px-3.5 py-2 font-mono text-xl font-extrabold text-[var(--text-primary)] focus:border-[#3A5465] focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- Selected Duration Summary Pill -->
+          <div
+            aria-live="polite"
+            class="mt-3 flex items-center justify-between rounded-xl bg-[#D4ED9D] px-4 py-3 text-[#3D3931] dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+          >
+            <span id="duration-summary-label" class="text-sm font-extrabold uppercase tracking-wide">
+              {t('controls.keptDuration')}:
+            </span>
+            <span id="selected-duration-badge" aria-live="polite" class="font-mono text-xl font-extrabold">
+              00:10.00 (10.0s)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Giant Dual-Handle Visual Timeline Bar -->
+      <div class="rounded-2xl border-2 border-[#64A97B] bg-[var(--card-subtle-bg)] p-4">
+        <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-bold text-[var(--text-secondary)]">
+          <span id="timeline-mode-badge" class="inline-flex items-center gap-1.5 rounded-lg bg-[#64A97B] px-2.5 py-0.5 text-xs font-extrabold text-white">
+            {t('controls.timelineKeepLabel')}
+          </span>
+          <span>{t('controls.keyboardHint')}</span>
+        </div>
+
+        <!-- Timeline Track -->
+        <div
+          id="timeline-track"
+          class="timeline-track-container my-3"
+          role="group"
+          aria-label="Dual-Handle Video Trim Timeline"
+        >
+          <!-- Filmstrip Thumbnail Strip Background -->
+          <div
+            id="timeline-filmstrip"
+            class="pointer-events-none absolute inset-0 flex overflow-hidden rounded-[14px] opacity-65"
+          ></div>
+
+          <!-- Cut-Middle Mode Left & Right Kept Overlays -->
+          <div id="timeline-cut-left" class="timeline-cut-middle-left hidden rounded-l-[14px]" style="left: 0%; width: 20%;"></div>
+          <div id="timeline-cut-right" class="timeline-cut-middle-right hidden rounded-r-[14px]" style="left: 80%; width: 20%;"></div>
+
+          <!-- Standard Active Selection Fill Bar (#64A97B border with #D4ED9D fill) -->
+          <div
+            id="timeline-selection-bar"
+            class="timeline-selection-fill"
+            style="left: 0%; width: 100%;"
+          ></div>
+
+          <!-- Left Start Handle (#3A5465) -->
+          <div
+            id="handle-start"
+            role="slider"
+            tabindex="0"
+            aria-label={t('controls.startTime')}
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            class="timeline-handle"
+            style="left: calc(0% - 14px);"
+          >
+            <div class="timeline-handle-grip"></div>
+          </div>
+
+          <!-- Right End Handle (#3A5465) -->
+          <div
+            id="handle-end"
+            role="slider"
+            tabindex="0"
+            aria-label={t('controls.endTime')}
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="100"
+            class="timeline-handle"
+            style="left: calc(100% - 14px);"
+          >
+            <div class="timeline-handle-grip"></div>
+          </div>
+
+          <!-- Live Playhead Indicator -->
+          <div id="timeline-playhead" class="timeline-playhead" style="left: 0%;"></div>
+        </div>
+
+        <!-- Ruler Tick Marks -->
+        <div id="timeline-ruler" class="flex justify-between px-1 font-mono text-xs font-bold text-[var(--text-secondary)]">
+          <span>00:00.0</span>
+          <span id="ruler-25">00:02.5</span>
+          <span id="ruler-50">00:05.0</span>
+          <span id="ruler-75">00:07.5</span>
+          <span id="ruler-100">00:10.0</span>
+        </div>
+      </div>
+
+      <!-- Collapsible Export Presets + Mute Audio Toggle + Main Trim Action CTA -->
+      <div class="space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <button
+            type="button"
+            id="export-presets-toggle-btn"
+            aria-expanded="false"
+            aria-controls="export-presets-collapse-panel"
+            class="inline-flex items-center gap-2.5 rounded-2xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] px-4 py-2 text-sm font-extrabold text-[var(--text-primary)] shadow-sm transition hover:border-[#3A5465] hover:bg-[#D4ED9D]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#64A97B]"
+          >
+            <span>{t('preset.sectionTitle')}:</span>
+            <span
+              id="active-export-preset-label"
+              class="rounded-lg bg-[#3A5465] px-2.5 py-0.5 text-xs font-extrabold text-white dark:bg-[#D4ED9D] dark:text-[#3D3931]"
+            >
+              {t('preset.losslessTitle')}
+            </span>
+            <svg
+              id="export-presets-chevron"
+              class="h-4 w-4 shrink-0 text-[#3A5465] transition-transform duration-200 dark:text-[#D4ED9D]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          <!-- Mute Audio Toggle Switch -->
+          <label
+            for="mute-audio-toggle"
+            class="inline-flex cursor-pointer items-center gap-3 rounded-2xl border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] px-4 py-2 text-sm font-extrabold text-[var(--text-primary)] shadow-sm transition hover:bg-[#D4ED9D]/40"
+          >
+            <input
+              type="checkbox"
+              id="mute-audio-toggle"
+              class="h-5 w-5 accent-[#3A5465] rounded"
+            />
+            <span>{t('preset.muteAudioLabel')}</span>
+            <span class="hidden sm:inline text-xs font-semibold text-[var(--text-secondary)]">
+              ({t('preset.muteAudioDesc')})
+            </span>
+          </label>
+        </div>
+
+        <!-- 3 Preset Cards (Hidden by default inside collapse panel) -->
+        <div
+          id="export-presets-collapse-panel"
+          class="hidden grid grid-cols-1 gap-3 md:grid-cols-3"
+          role="radiogroup"
+          aria-label={t('preset.sectionTitle')}
+        >
+          <!-- Preset 1: Instant Lossless Cut -->
+          <div
+            data-preset="lossless"
+            data-preset-title={t('preset.losslessTitle')}
+            tabindex="0"
+            role="radio"
+            aria-checked="true"
+            class="preset-card cursor-pointer rounded-2xl border-[3px] border-[#3A5465] bg-[#D4ED9D]/55 p-4 transition-all duration-200 hover:shadow-md dark:border-[#D4ED9D] dark:bg-[#3D3931]"
+          >
+            <div class="mb-2 flex items-center justify-between gap-2">
+              <span class="inline-block rounded-lg bg-[#3A5465] px-2.5 py-0.5 text-xs font-extrabold text-white dark:bg-[#D4ED9D] dark:text-[#3D3931]">
+                {t('preset.losslessBadge')}
+              </span>
+              <div class="preset-radio-dot h-5 w-5 rounded-full border-2 border-[#3A5465] bg-[#3A5465] dark:border-[#D4ED9D] dark:bg-[#D4ED9D]"></div>
+            </div>
+            <h4 class="mb-1 text-base font-extrabold text-[var(--text-primary)]">
+              {t('preset.losslessTitle')}
+            </h4>
+            <p class="text-xs sm:text-sm font-medium text-[var(--text-secondary)]">
+              {t('preset.losslessDesc')}
+            </p>
+          </div>
+
+          <!-- Preset 2: Frame-Accurate Precision Cut -->
+          <div
+            data-preset="precision"
+            data-preset-title={t('preset.precisionTitle')}
+            tabindex="0"
+            role="radio"
+            aria-checked="false"
+            class="preset-card cursor-pointer rounded-2xl border-2 border-[#64A97B]/60 bg-[var(--card-subtle-bg)] p-4 transition-all duration-200 hover:border-[#3A5465] hover:shadow-md"
+          >
+            <div class="mb-2 flex items-center justify-between gap-2">
+              <span class="inline-block rounded-lg bg-[#64A97B] px-2.5 py-0.5 text-xs font-extrabold text-white">
+                {t('preset.precisionBadge')}
+              </span>
+              <div class="preset-radio-dot h-5 w-5 rounded-full border-2 border-[#64A97B] bg-transparent"></div>
+            </div>
+            <h4 class="mb-1 text-base font-extrabold text-[var(--text-primary)]">
+              {t('preset.precisionTitle')}
+            </h4>
+            <p class="text-xs sm:text-sm font-medium text-[var(--text-secondary)]">
+              {t('preset.precisionDesc')}
+            </p>
+          </div>
+
+          <!-- Preset 3: Trim & Extract MP3 Audio -->
+          <div
+            data-preset="mp3"
+            data-preset-title={t('preset.mp3Title')}
+            tabindex="0"
+            role="radio"
+            aria-checked="false"
+            class="preset-card cursor-pointer rounded-2xl border-2 border-[#64A97B]/60 bg-[var(--card-subtle-bg)] p-4 transition-all duration-200 hover:border-[#3A5465] hover:shadow-md"
+          >
+            <div class="mb-2 flex items-center justify-between gap-2">
+              <span class="inline-block rounded-lg bg-[#64A97B] px-2.5 py-0.5 text-xs font-extrabold text-white">
+                {t('preset.mp3Badge')}
+              </span>
+              <div class="preset-radio-dot h-5 w-5 rounded-full border-2 border-[#64A97B] bg-transparent"></div>
+            </div>
+            <h4 class="mb-1 text-base font-extrabold text-[var(--text-primary)]">
+              {t('preset.mp3Title')}
+            </h4>
+            <p class="text-xs sm:text-sm font-medium text-[var(--text-secondary)]">
+              {t('preset.mp3Desc')}
+            </p>
+          </div>
+        </div>
+
+        <!-- Error Banner (shown only if a file/codec error occurs) -->
+        <div
+          id="trimmer-error-banner"
+          role="alert"
+          class="hidden mx-auto max-w-2xl items-center justify-between gap-3 rounded-2xl border-2 border-red-400/80 bg-red-50 px-4 py-3 text-sm font-bold text-red-900 shadow-sm dark:border-red-500/70 dark:bg-red-950/60 dark:text-red-200"
+        >
+          <span id="trimmer-error-text" class="flex-1 text-left"></span>
+          <button
+            type="button"
+            id="dismiss-error-btn"
+            aria-label="Dismiss error"
+            class="shrink-0 rounded-lg px-2 py-1 text-xs font-extrabold hover:bg-red-200/60 dark:hover:bg-red-800/60"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Primary Execute Trim Button -->
+        <div class="pt-2 text-center">
+          <button
+            type="button"
+            id="execute-trim-btn"
+            class="inline-flex w-full sm:w-auto min-w-[300px] items-center justify-center gap-3 rounded-2xl bg-[#3A5465] px-10 py-4 text-xl font-extrabold text-white shadow-btn transition-all duration-200 hover:bg-[#64A97B] hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#64A97B] dark:bg-[#D4ED9D] dark:text-[#3D3931] dark:hover:bg-[#64A97B] dark:hover:text-white"
+          >
+            <svg class="h-7 w-7 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="6" cy="6" r="3" />
+              <circle cx="6" cy="18" r="3" />
+              <line x1="20" y1="4" x2="8.12" y2="15.88" />
+              <line x1="14.47" y1="14.48" x2="20" y2="20" />
+              <line x1="8.12" y1="8.12" x2="12" y2="12" />
+            </svg>
+            <span id="execute-trim-btn-label">{t('controls.trimActionBtn')}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         STEP 3: ANIMATED PROGRESS
+         ========================================== -->
+    <div
+      id="step-3-progress"
+      role="status"
+      aria-live="polite"
+      class="hidden flex-col items-center justify-center rounded-3xl border-2 border-[#64A97B] bg-[var(--card-subtle-bg)] px-6 py-10 text-center"
+    >
+      <div
+        class="mb-4 inline-flex items-center gap-2 rounded-full border border-[#64A97B] bg-[#D4ED9D] px-4 py-1.5 text-xs sm:text-sm font-extrabold text-[#3D3931] dark:bg-[#3D3931] dark:text-[#D4ED9D]"
+      >
+        <span class="h-2.5 w-2.5 rounded-full bg-[#3A5465] dark:bg-[#D4ED9D] animate-ping"></span>
+        <span>{t('progress.localRamBadge')}</span>
+      </div>
+
+      <h3
+        id="progress-status-heading"
+        aria-live="polite"
+        class="mb-2 text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]"
+      >
+        {t('progress.losslessStatus')}
+      </h3>
+
+      <p
+        id="progress-percentage-text"
+        aria-live="polite"
+        class="mb-4 font-mono text-3xl font-extrabold text-[#3A5465] dark:text-[#D4ED9D]"
+      >
+        0%
+      </p>
+
+      <!-- Gradient Progress Track -->
+      <div class="mb-4 h-6 w-full max-w-xl overflow-hidden rounded-full border-2 border-[#64A97B] bg-[var(--workspace-box-bg)] p-0.5 shadow-inner">
+        <div
+          id="progress-bar-fill"
+          class="progress-gradient-bar h-full rounded-full transition-all duration-150"
+          style="width: 12%;"
+        ></div>
+      </div>
+
+      <p id="progress-log-line" class="text-xs sm:text-sm font-semibold text-[var(--text-secondary)] max-w-lg truncate">
+        {t('progress.loadingEngine')}
+      </p>
+    </div>
+
+    <!-- ==========================================
+         STEP 4: BEFORE/AFTER & INSTANT DOWNLOAD
+         ========================================== -->
+    <div id="step-4-result" aria-live="polite" class="hidden space-y-6">
+      <!-- Visual Duration & Size Summary Banner -->
+      <div
+        role="status"
+        aria-live="polite"
+        class="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border-2 border-[#64A97B] bg-[#D4ED9D] px-5 py-4 text-[#3D3931] shadow-sm dark:bg-[#3D3931] dark:text-[#F7FBF2]"
+      >
+        <div class="flex items-center gap-3">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#3A5465] text-white dark:bg-[#D4ED9D] dark:text-[#3D3931]">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-wider opacity-80">
+              {t('result.summaryTitle')}
+            </p>
+            <p id="before-after-summary-text" aria-live="polite" class="text-base sm:text-lg font-extrabold">
+              Original: 00:10 (0.28 MB) → Trimmed Clip: 00:05 (0.14 MB) — Zero Quality Loss!
+            </p>
+          </div>
+        </div>
+        <span
+          id="result-speed-badge"
+          class="shrink-0 rounded-xl bg-[#3A5465] px-3.5 py-1.5 font-mono text-xs font-extrabold text-white dark:bg-[#64A97B]"
+        >
+          0.3s
+        </span>
+      </div>
+
+      <!-- Preview Player of the Cut Clip -->
+      <div class="mx-auto max-w-3xl overflow-hidden rounded-2xl border-2 border-[#64A97B] bg-[#182229] p-3 shadow-lg">
+        <video
+          id="result-video-preview"
+          controls
+          playsinline
+          class="max-h-[360px] w-full rounded-xl bg-black object-contain"
+        ></video>
+        <audio
+          id="result-audio-preview"
+          controls
+          class="hidden w-full my-4"
+        ></audio>
+      </div>
+
+      <!-- Oversized Download & Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a
+          id="download-output-link"
+          href="#"
+          download="trimmed-video.mp4"
+          class="inline-flex items-center gap-3 rounded-2xl bg-[#3A5465] px-9 py-4 text-xl font-extrabold text-white shadow-btn transition-all duration-200 hover:bg-[#64A97B] hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#64A97B] dark:bg-[#D4ED9D] dark:text-[#3D3931] dark:hover:bg-[#64A97B] dark:hover:text-white"
+        >
+          <svg class="h-7 w-7 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span id="download-btn-label">{t('result.downloadVideoBtn')}</span>
+        </a>
+
+        <button
+          type="button"
+          id="back-to-timeline-btn"
+          class="inline-flex items-center gap-2 rounded-2xl border-2 border-[#64A97B] bg-[var(--card-subtle-bg)] px-6 py-4 text-base sm:text-lg font-extrabold text-[var(--text-primary)] transition hover:bg-[#D4ED9D]/60 dark:hover:bg-[#3A5465]"
+        >
+          <span>{t('result.trimAnotherSegmentBtn')}</span>
+        </button>
+
+        <button
+          type="button"
+          id="trim-new-file-btn"
+          class="inline-flex items-center gap-2 rounded-2xl border-2 border-[#3A5465] bg-transparent px-6 py-4 text-base sm:text-lg font-extrabold text-[var(--text-primary)] transition hover:bg-[#64A97B] hover:text-white"
+        >
+          <span>{t('result.trimNewFileBtn')}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type { FFmpeg } from '@ffmpeg/ffmpeg';
+
+  (function initVideoTrimmer() {
+    const workspace = document.getElementById('video-trimmer-workspace');
+    if (!workspace) return;
+
+    // i18n strings from dataset
+    const i18n = {
+      losslessStatus: workspace.dataset.i18nLosslessStatus || 'Lossless Stream-Copy Cutting...',
+      precisionStatus: workspace.dataset.i18nPrecisionStatus || 'Frame-Accurate H.264 Encoding...',
+      audioStatus: workspace.dataset.i18nAudioStatus || 'Extracting & Trimming MP3 Audio...',
+      loadingEngine: workspace.dataset.i18nLoadingEngine || 'Initializing Client-Side WebAssembly Engine...',
+      original: workspace.dataset.i18nOriginal || 'Original',
+      trimmed: workspace.dataset.i18nTrimmed || 'Trimmed Clip',
+      zeroLoss: workspace.dataset.i18nZeroLoss || 'Zero Quality Loss!',
+      play: workspace.dataset.i18nPlay || 'Play Selection',
+      pause: workspace.dataset.i18nPause || 'Pause',
+      trimBtn: workspace.dataset.i18nTrimBtn || 'Trim Video Now',
+      cutBtn: workspace.dataset.i18nCutBtn || 'Cut Out Middle Section',
+      extractBtn: workspace.dataset.i18nExtractBtn || 'Extract Trimmed MP3',
+      dlVideo: workspace.dataset.i18nDlVideo || 'Download Trimmed Video',
+      dlAudio: workspace.dataset.i18nDlAudio || 'Download Trimmed MP3',
+      keepLabel: workspace.dataset.i18nKeepLabel || 'KEEP SELECTED CLIP',
+      removeLabel: workspace.dataset.i18nRemoveLabel || 'CUT OUT MIDDLE SECTION',
+      modeTrimDesc: workspace.dataset.i18nModeTrimDesc || '',
+      modeCutDesc: workspace.dataset.i18nModeCutDesc || '',
+      modeMobileDesc: workspace.dataset.i18nModeMobileDesc || '',
+      modeAudioDesc: workspace.dataset.i18nModeAudioDesc || '',
+      modeExtractDesc: workspace.dataset.i18nModeExtractDesc || '',
+    };
+
+    // DOM Elements
+    const modePills = Array.from(document.querySelectorAll<HTMLButtonElement>('.mode-pill'));
+    const modeDescEl = document.getElementById('active-mode-description');
+    const modePresetsToggleBtn = document.getElementById('mode-presets-toggle-btn');
+    const modePresetsCollapsePanel = document.getElementById('mode-presets-collapse-panel');
+    const modePresetsChevron = document.getElementById('mode-presets-chevron');
+    const activeModeLabelText = document.getElementById('active-mode-label-text');
+
+    const exportPresetsToggleBtn = document.getElementById('export-presets-toggle-btn');
+    const exportPresetsCollapsePanel = document.getElementById('export-presets-collapse-panel');
+    const exportPresetsChevron = document.getElementById('export-presets-chevron');
+    const activeExportPresetLabel = document.getElementById('active-export-preset-label');
+
+    const fileInput = document.getElementById('trimmer-file-input') as HTMLInputElement | null;
+    const selectVideoBtn = document.getElementById('select-video-btn');
+
+    const step1Dropzone = document.getElementById('step-1-dropzone');
+    const step2Controls = document.getElementById('step-2-controls');
+    const step3Progress = document.getElementById('step-3-progress');
+    const step4Result = document.getElementById('step-4-result');
+
+    const batchFilePills = document.getElementById('batch-file-pills');
+    const addMoreFilesBtn = document.getElementById('add-more-files-btn');
+    const replaceFileBtn = document.getElementById('replace-file-btn');
+
+    const videoPlayer = document.getElementById('source-video-player') as HTMLVideoElement | null;
+    const audioOverlay = document.getElementById('audio-only-overlay');
+    const audioFileTitle = document.getElementById('audio-file-title');
+    const livePlayheadReadout = document.getElementById('live-playhead-readout');
+    const totalDurationReadout = document.getElementById('total-duration-readout');
+
+    const playSelectionBtn = document.getElementById('play-selection-btn');
+    const playSelectionLabel = document.getElementById('play-selection-label');
+    const loopCheckbox = document.getElementById('loop-selection-checkbox') as HTMLInputElement | null;
+    const resetRangeBtn = document.getElementById('reset-range-btn');
+
+    const startTimeInput = document.getElementById('start-time-input') as HTMLInputElement | null;
+    const endTimeInput = document.getElementById('end-time-input') as HTMLInputElement | null;
+    const nudgeStartMinus = document.getElementById('nudge-start-minus');
+    const nudgeStartPlus = document.getElementById('nudge-start-plus');
+    const nudgeEndMinus = document.getElementById('nudge-end-minus');
+    const nudgeEndPlus = document.getElementById('nudge-end-plus');
+    const selectedDurationBadge = document.getElementById('selected-duration-badge');
+
+    const timelineTrack = document.getElementById('timeline-track');
+    const timelineFilmstrip = document.getElementById('timeline-filmstrip');
+    const timelineSelectionBar = document.getElementById('timeline-selection-bar');
+    const timelineCutLeft = document.getElementById('timeline-cut-left');
+    const timelineCutRight = document.getElementById('timeline-cut-right');
+    const handleStart = document.getElementById('handle-start');
+    const handleEnd = document.getElementById('handle-end');
+    const timelinePlayhead = document.getElementById('timeline-playhead');
+    const timelineModeBadge = document.getElementById('timeline-mode-badge');
+
+    const ruler25 = document.getElementById('ruler-25');
+    const ruler50 = document.getElementById('ruler-50');
+    const ruler75 = document.getElementById('ruler-75');
+    const ruler100 = document.getElementById('ruler-100');
+
+    const presetCards = Array.from(document.querySelectorAll<HTMLElement>('.preset-card'));
+    const muteAudioToggle = document.getElementById('mute-audio-toggle') as HTMLInputElement | null;
+    const executeTrimBtn = document.getElementById('execute-trim-btn');
+    const executeTrimBtnLabel = document.getElementById('execute-trim-btn-label');
+
+    const progressStatusHeading = document.getElementById('progress-status-heading');
+    const progressPercentageText = document.getElementById('progress-percentage-text');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressLogLine = document.getElementById('progress-log-line');
+    const trimmerErrorBanner = document.getElementById('trimmer-error-banner');
+    const trimmerErrorText = document.getElementById('trimmer-error-text');
+    const dismissErrorBtn = document.getElementById('dismiss-error-btn');
+
+    const beforeAfterSummaryText = document.getElementById('before-after-summary-text');
+    const resultSpeedBadge = document.getElementById('result-speed-badge');
+    const resultVideoPreview = document.getElementById('result-video-preview') as HTMLVideoElement | null;
+    const resultAudioPreview = document.getElementById('result-audio-preview') as HTMLAudioElement | null;
+    const downloadOutputLink = document.getElementById('download-output-link') as HTMLAnchorElement | null;
+    const downloadBtnLabel = document.getElementById('download-btn-label');
+    const backToTimelineBtn = document.getElementById('back-to-timeline-btn');
+    const trimNewFileBtn = document.getElementById('trim-new-file-btn');
+
+    // State
+    type TrimmerMode = 'trim-video' | 'cut-middle' | 'mobile-video' | 'trim-audio' | 'extract-mp3';
+    type PresetMode = 'lossless' | 'precision' | 'mp3';
+
+    let currentMode: TrimmerMode = 'trim-video';
+    let currentPreset: PresetMode = 'lossless';
+    let loadedFiles: File[] = [];
+    let activeFileIndex = 0;
+    let sourceObjectUrl: string | null = null;
+    let resultObjectUrl: string | null = null;
+
+    let videoDuration = 10.0;
+    let startTime = 0.0;
+    let endTime = 10.0;
+    let activeDragTarget: 'start' | 'end' | 'bar' | null = null;
+    let barDragOffset = 0;
+
+    interface ProbeResult {
+      duration: number;
+      hasAudio: boolean;
+      hasVideo: boolean;
+    }
+
+    interface TrimmerEngine {
+      writeFile(path: string, data: Uint8Array): Promise<boolean>;
+      exec(args: string[]): Promise<number>;
+      probe(path: string): Promise<ProbeResult>;
+      readFile(path: string): Promise<Uint8Array>;
+      deleteFile(path: string): Promise<boolean>;
+      rename(oldPath: string, newPath: string): Promise<boolean>;
+    }
+
+    // Singleton FFmpeg Engine instance
+    let ffmpegInstance: TrimmerEngine | null = null;
+    let ffmpegLoaded = false;
+
+    function hasSubTenth(sec: number): boolean {
+      const clamped = Math.max(0, Number.isFinite(sec) ? sec : 0);
+      return Math.round(clamped * 100) % 10 !== 0;
+    }
+
+    // Formatting helpers (supports both 00:00.0 and 00:00:00.00)
+    function formatTimecode(sec: number, includeHundredths = false): string {
+      const clamped = Math.max(0, Number.isFinite(sec) ? sec : 0);
+      const useHundredths = includeHundredths || hasSubTenth(clamped);
+      const hrs = Math.floor(clamped / 3600);
+      const mins = Math.floor((clamped % 3600) / 60);
+      const secs = clamped % 60;
+      const mm = String(mins).padStart(2, '0');
+      const ss = secs.toFixed(useHundredths ? 2 : 1).padStart(useHundredths ? 5 : 4, '0');
+      if (hrs > 0) {
+        const hh = String(hrs).padStart(2, '0');
+        return `${hh}:${mm}:${ss}`;
+      }
+      return `${mm}:${ss}`;
+    }
+
+    function parseTimecode(str: string, fallback: number): number {
+      const clean = str.trim();
+      if (!clean) return fallback;
+      const parts = clean.split(':').map(Number);
+      if (parts.some((n) => Number.isNaN(n))) return fallback;
+      let seconds = 0;
+      if (parts.length === 3) {
+        seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+      } else if (parts.length === 2) {
+        seconds = parts[0] * 60 + parts[1];
+      } else if (parts.length === 1) {
+        seconds = parts[0];
+      } else {
+        return fallback;
+      }
+      return Math.max(0, Math.min(videoDuration, seconds));
+    }
+
+    function formatMegabytes(bytes: number): string {
+      const mb = bytes / (1024 * 1024);
+      if (mb < 0.1) {
+        return `${(bytes / 1024).toFixed(1)} KB`;
+      }
+      return `${mb.toFixed(2)} MB`;
+    }
+
+    // Step Visibility Switcher
+    function showStep(stepNumber: 1 | 2 | 3 | 4) {
+      step1Dropzone?.classList.toggle('hidden', stepNumber !== 1);
+      step2Controls?.classList.toggle('hidden', stepNumber !== 2);
+      step3Progress?.classList.toggle('hidden', stepNumber !== 3);
+      step3Progress?.classList.toggle('flex', stepNumber === 3);
+      step4Result?.classList.toggle('hidden', stepNumber !== 4);
+    }
+
+    // Collapsible Mode Presets & Export Presets Helpers
+    function setModeCollapseOpen(open: boolean) {
+      modePresetsCollapsePanel?.classList.toggle('hidden', !open);
+      modePresetsChevron?.classList.toggle('rotate-180', open);
+      modePresetsToggleBtn?.setAttribute('aria-expanded', String(open));
+    }
+
+    modePresetsToggleBtn?.addEventListener('click', () => {
+      const isExpanded = modePresetsToggleBtn.getAttribute('aria-expanded') === 'true';
+      setModeCollapseOpen(!isExpanded);
+    });
+
+    function setExportCollapseOpen(open: boolean) {
+      exportPresetsCollapsePanel?.classList.toggle('hidden', !open);
+      exportPresetsChevron?.classList.toggle('rotate-180', open);
+      exportPresetsToggleBtn?.setAttribute('aria-expanded', String(open));
+    }
+
+    exportPresetsToggleBtn?.addEventListener('click', () => {
+      const isExpanded = exportPresetsToggleBtn.getAttribute('aria-expanded') === 'true';
+      setExportCollapseOpen(!isExpanded);
+    });
+
+    // Select Preset Card UI
+    function setPreset(preset: PresetMode) {
+      currentPreset = preset;
+      presetCards.forEach((card) => {
+        const isSelected = card.dataset.preset === preset;
+        card.setAttribute('aria-checked', String(isSelected));
+        const dot = card.querySelector('.preset-radio-dot');
+        if (isSelected) {
+          card.classList.add('border-[3px]', 'border-[#3A5465]', 'bg-[#D4ED9D]/55', 'dark:border-[#D4ED9D]', 'dark:bg-[#3D3931]');
+          card.classList.remove('border-2', 'border-[#64A97B]/60', 'bg-[var(--card-subtle-bg)]');
+          dot?.classList.add('bg-[#3A5465]', 'border-[#3A5465]', 'dark:bg-[#D4ED9D]', 'dark:border-[#D4ED9D]');
+          dot?.classList.remove('bg-transparent', 'border-[#64A97B]');
+          if (activeExportPresetLabel && card.dataset.presetTitle) {
+            activeExportPresetLabel.textContent = card.dataset.presetTitle;
+          }
+        } else {
+          card.classList.remove('border-[3px]', 'border-[#3A5465]', 'bg-[#D4ED9D]/55', 'dark:border-[#D4ED9D]', 'dark:bg-[#3D3931]');
+          card.classList.add('border-2', 'border-[#64A97B]/60', 'bg-[var(--card-subtle-bg)]');
+          dot?.classList.remove('bg-[#3A5465]', 'border-[#3A5465]', 'dark:bg-[#D4ED9D]', 'dark:border-[#D4ED9D]');
+          dot?.classList.add('bg-transparent', 'border-[#64A97B]');
+        }
+      });
+      syncActionLabels();
+    }
+
+    function syncActionLabels() {
+      if (!executeTrimBtnLabel) return;
+      if (currentPreset === 'mp3' || currentMode === 'extract-mp3' || currentMode === 'trim-audio') {
+        executeTrimBtnLabel.textContent = i18n.extractBtn;
+      } else if (currentMode === 'cut-middle') {
+        executeTrimBtnLabel.textContent = i18n.cutBtn;
+      } else {
+        executeTrimBtnLabel.textContent = i18n.trimBtn;
+      }
+    }
+
+    // Mode Selector Pills Handler
+    function setMode(mode: TrimmerMode) {
+      currentMode = mode;
+      modePills.forEach((pill) => {
+        const isMatch = pill.dataset.mode === mode;
+        pill.setAttribute('aria-selected', String(isMatch));
+        if (isMatch) {
+          pill.classList.add('border-[#3A5465]', 'bg-[#3A5465]', 'text-white', 'font-extrabold', 'shadow-md', 'dark:border-[#D4ED9D]', 'dark:bg-[#D4ED9D]', 'dark:text-[#3D3931]');
+          pill.classList.remove('border-[#64A97B]', 'bg-[#F7FBF2]', 'text-[#3D3931]', 'dark:bg-[#3D3931]', 'dark:text-[#F7FBF2]');
+          const labelSpan = pill.querySelector('span');
+          if (activeModeLabelText && labelSpan?.textContent) {
+            activeModeLabelText.textContent = labelSpan.textContent;
+          }
+        } else {
+          pill.classList.remove('border-[#3A5465]', 'bg-[#3A5465]', 'text-white', 'font-extrabold', 'shadow-md', 'dark:border-[#D4ED9D]', 'dark:bg-[#D4ED9D]', 'dark:text-[#3D3931]');
+          pill.classList.add('border-[#64A97B]', 'bg-[#F7FBF2]', 'text-[#3D3931]', 'dark:bg-[#3D3931]', 'dark:text-[#F7FBF2]');
+        }
+      });
+
+      if (modeDescEl) {
+        const map: Record<TrimmerMode, string> = {
+          'trim-video': i18n.modeTrimDesc,
+          'cut-middle': i18n.modeCutDesc,
+          'mobile-video': i18n.modeMobileDesc,
+          'trim-audio': i18n.modeAudioDesc,
+          'extract-mp3': i18n.modeExtractDesc,
+        };
+        modeDescEl.textContent = map[mode];
+      }
+
+      if (mode === 'extract-mp3' || mode === 'trim-audio') {
+        setPreset('mp3');
+      } else if (currentPreset === 'mp3') {
+        setPreset('lossless');
+      }
+
+      if (timelineModeBadge) {
+        timelineModeBadge.textContent = mode === 'cut-middle' ? i18n.removeLabel : i18n.keepLabel;
+      }
+
+      if (mode === 'cut-middle' && videoDuration > 1 && startTime <= 0.1 && endTime >= videoDuration - 0.1) {
+        startTime = Number((videoDuration * 0.3).toFixed(1));
+        endTime = Number((videoDuration * 0.7).toFixed(1));
+      }
+
+      syncActionLabels();
+      updateTimelineUI();
+    }
+
+    modePills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const mode = (pill.dataset.mode as TrimmerMode) || 'trim-video';
+        setMode(mode);
+        setModeCollapseOpen(false);
+      });
+    });
+
+    presetCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const preset = (card.dataset.preset as PresetMode) || 'lossless';
+        setPreset(preset);
+        setExportCollapseOpen(false);
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const preset = (card.dataset.preset as PresetMode) || 'lossless';
+          setPreset(preset);
+          setExportCollapseOpen(false);
+        }
+      });
+    });
+
+    // Update Timeline UI & Timecode Inputs
+    function updateTimelineUI() {
+      const safeDur = Math.max(0.1, videoDuration);
+      const startPct = Math.max(0, Math.min(100, (startTime / safeDur) * 100));
+      const endPct = Math.max(0, Math.min(100, (endTime / safeDur) * 100));
+      const widthPct = Math.max(0, endPct - startPct);
+
+      if (handleStart) {
+        handleStart.style.left = `calc(${startPct}% - 14px)`;
+        handleStart.setAttribute('aria-valuenow', startPct.toFixed(1));
+      }
+      if (handleEnd) {
+        handleEnd.style.left = `calc(${endPct}% - 14px)`;
+        handleEnd.setAttribute('aria-valuenow', endPct.toFixed(1));
+      }
+
+      if (currentMode === 'cut-middle') {
+        timelineCutLeft?.classList.remove('hidden');
+        timelineCutRight?.classList.remove('hidden');
+        if (timelineCutLeft) {
+          timelineCutLeft.style.left = '0%';
+          timelineCutLeft.style.width = `${startPct}%`;
+        }
+        if (timelineCutRight) {
+          timelineCutRight.style.left = `${endPct}%`;
+          timelineCutRight.style.width = `${100 - endPct}%`;
+        }
+        if (timelineSelectionBar) {
+          timelineSelectionBar.style.left = `${startPct}%`;
+          timelineSelectionBar.style.width = `${widthPct}%`;
+          timelineSelectionBar.style.background =
+            'repeating-linear-gradient(45deg, rgba(58,84,101,0.35), rgba(58,84,101,0.35) 10px, rgba(61,57,49,0.2) 10px, rgba(61,57,49,0.2) 20px)';
+        }
+      } else {
+        timelineCutLeft?.classList.add('hidden');
+        timelineCutRight?.classList.add('hidden');
+        if (timelineSelectionBar) {
+          timelineSelectionBar.style.left = `${startPct}%`;
+          timelineSelectionBar.style.width = `${widthPct}%`;
+          timelineSelectionBar.style.background = '';
+        }
+      }
+
+      if (startTimeInput && document.activeElement !== startTimeInput) {
+        startTimeInput.value = formatTimecode(startTime, false);
+      }
+      if (endTimeInput && document.activeElement !== endTimeInput) {
+        endTimeInput.value = formatTimecode(endTime, false);
+      }
+
+      const clipLen =
+        currentMode === 'cut-middle'
+          ? Math.max(0, startTime + (videoDuration - endTime))
+          : Math.max(0, endTime - startTime);
+
+      if (selectedDurationBadge) {
+        selectedDurationBadge.textContent = `${formatTimecode(clipLen, false)} (${clipLen.toFixed(hasSubTenth(clipLen) ? 2 : 1)}s)`;
+      }
+    }
+
+    // Render Batch File Pills
+    function renderBatchFileQueue() {
+      if (!batchFilePills) return;
+      batchFilePills.innerHTML = '';
+      loadedFiles.forEach((file, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isCurrent = idx === activeFileIndex;
+        btn.className = isCurrent
+          ? 'inline-flex items-center gap-2 rounded-xl bg-[#3A5465] px-3 py-1.5 text-xs sm:text-sm font-extrabold text-white shadow dark:bg-[#D4ED9D] dark:text-[#3D3931]'
+          : 'inline-flex items-center gap-2 rounded-xl border border-[#64A97B] bg-[var(--workspace-box-bg)] px-3 py-1.5 text-xs sm:text-sm font-bold text-[var(--text-primary)] hover:bg-[#D4ED9D]/40';
+        const shortName = file.name.length > 26 ? file.name.slice(0, 23) + '...' : file.name;
+        btn.textContent = `${idx + 1}. ${shortName} (${formatMegabytes(file.size)})`;
+        btn.addEventListener('click', () => {
+          activeFileIndex = idx;
+          loadActiveFileIntoWorkspace();
+        });
+        batchFilePills.appendChild(btn);
+      });
+    }
+
+    // Generate Filmstrip Thumbnails on Timeline
+    async function generateFilmstrip(fileUrl: string, dur: number, isAudio: boolean) {
+      if (!timelineFilmstrip) return;
+      timelineFilmstrip.innerHTML = '';
+      if (isAudio || dur <= 0) {
+        // Render decorative botanical waveform bars for audio files
+        for (let i = 0; i < 32; i++) {
+          const bar = document.createElement('div');
+          const h = 25 + Math.round(Math.abs(Math.sin(i * 0.65)) * 65);
+          bar.className = 'flex-1 mx-0.5 self-center rounded-full bg-[#64A97B]/50';
+          bar.style.height = `${h}%`;
+          timelineFilmstrip.appendChild(bar);
+        }
+        return;
+      }
+
+      const thumbVideo = document.createElement('video');
+      thumbVideo.src = fileUrl;
+      thumbVideo.muted = true;
+      thumbVideo.playsInline = true;
+      thumbVideo.preload = 'auto';
+
+      await new Promise<void>((resolve) => {
+        thumbVideo.addEventListener('loadeddata', () => resolve(), { once: true });
+        thumbVideo.addEventListener('error', () => resolve(), { once: true });
+      });
+
+      const frameCount = 8;
+      const canvas = document.createElement('canvas');
+      canvas.width = 160;
+      canvas.height = 90;
+      const ctx = canvas.getContext('2d');
+
+      for (let i = 0; i < frameCount; i++) {
+        const seekTarget = Math.min(dur - 0.05, ((i + 0.5) / frameCount) * dur);
+        thumbVideo.currentTime = Math.max(0, seekTarget);
+        await new Promise<void>((resolve) => {
+          const onSeeked = () => {
+            thumbVideo.removeEventListener('seeked', onSeeked);
+            resolve();
+          };
+          thumbVideo.addEventListener('seeked', onSeeked);
+          setTimeout(resolve, 250);
+        });
+        if (ctx && thumbVideo.videoWidth > 0) {
+          ctx.drawImage(thumbVideo, 0, 0, canvas.width, canvas.height);
+          const img = document.createElement('img');
+          img.src = canvas.toDataURL('image/jpeg', 0.55);
+          img.alt = '';
+          img.className = 'h-full flex-1 object-cover border-r border-[#64A97B]/30 last:border-none';
+          timelineFilmstrip.appendChild(img);
+        }
+      }
+    }
+
+    // Load active file into HTML5 Video Player and initialize timeline
+    function loadActiveFileIntoWorkspace() {
+      const file = loadedFiles[activeFileIndex];
+      if (!file || !videoPlayer) return;
+
+      renderBatchFileQueue();
+      showStep(2);
+
+      if (sourceObjectUrl) {
+        URL.revokeObjectURL(sourceObjectUrl);
+      }
+      sourceObjectUrl = URL.createObjectURL(file);
+      videoPlayer.src = sourceObjectUrl;
+      videoPlayer.load();
+
+      const isAudioFile =
+        file.type.startsWith('audio/') || /\.(mp3|wav|m4a|ogg|flac|aac)$/i.test(file.name);
+
+      if (isAudioFile) {
+        audioOverlay?.classList.remove('hidden');
+        if (audioFileTitle) audioFileTitle.textContent = file.name;
+        if (currentMode === 'trim-video') {
+          setMode('trim-audio');
+        }
+      } else {
+        audioOverlay?.classList.add('hidden');
+      }
+
+      videoPlayer.onloadedmetadata = () => {
+        const rawDur = videoPlayer.duration;
+        videoDuration = Number.isFinite(rawDur) && rawDur > 0 ? rawDur : 10.0;
+        startTime = 0.0;
+        endTime = videoDuration;
+
+        if ( currentMode === 'cut-middle' && videoDuration > 2 ) {
+          startTime = Number((videoDuration * 0.3).toFixed(1));
+          endTime = Number((videoDuration * 0.7).toFixed(1));
+        }
+
+        if (totalDurationReadout) {
+          totalDurationReadout.textContent = formatTimecode(videoDuration, false);
+        }
+        if (ruler25) ruler25.textContent = formatTimecode(videoDuration * 0.25, false);
+        if (ruler50) ruler50.textContent = formatTimecode(videoDuration * 0.5, false);
+        if (ruler75) ruler75.textContent = formatTimecode(videoDuration * 0.75, false);
+        if (ruler100) ruler100.textContent = formatTimecode(videoDuration, false);
+
+        updateTimelineUI();
+        if (sourceObjectUrl) {
+          generateFilmstrip(sourceObjectUrl, videoDuration, isAudioFile);
+        }
+      };
+
+      videoPlayer.onerror = () => {
+        videoDuration = 10.0;
+        startTime = 0.0;
+        endTime = 10.0;
+        updateTimelineUI();
+      };
+    }
+
+    function handleIncomingFiles(fileList: FileList | File[]) {
+      const arr = Array.from(fileList);
+      if (!arr.length) return;
+      loadedFiles = [...loadedFiles, ...arr];
+      activeFileIndex = loadedFiles.length - arr.length;
+      loadActiveFileIntoWorkspace();
+    }
+
+    // Step 1 Dropzone Events
+    selectVideoBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput?.click();
+    });
+
+    step1Dropzone?.addEventListener('click', () => {
+      fileInput?.click();
+    });
+
+    addMoreFilesBtn?.addEventListener('click', () => {
+      fileInput?.click();
+    });
+
+    replaceFileBtn?.addEventListener('click', () => {
+      loadedFiles = [];
+      fileInput?.click();
+    });
+
+    fileInput?.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files.length > 0) {
+        handleIncomingFiles(fileInput.files);
+        fileInput.value = '';
+      }
+    });
+
+    // Drag and Drop support on Dropzone and Workspace
+    ['dragenter', 'dragover'].forEach((evt) => {
+      step1Dropzone?.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        step1Dropzone.classList.add('border-[#3A5465]', 'bg-[var(--dropzone-hover-bg)]', 'scale-[1.01]');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach((evt) => {
+      step1Dropzone?.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        step1Dropzone.classList.remove('border-[#3A5465]', 'bg-[var(--dropzone-hover-bg)]', 'scale-[1.01]');
+      });
+    });
+
+    step1Dropzone?.addEventListener('drop', (e: DragEvent) => {
+      if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+        handleIncomingFiles(e.dataTransfer.files);
+      }
+    });
+
+    // Video Player Sync with Playhead & Loop Selection
+    videoPlayer?.addEventListener('timeupdate', () => {
+      if (!videoPlayer) return;
+      const cur = videoPlayer.currentTime;
+      if (livePlayheadReadout) {
+        livePlayheadReadout.textContent = formatTimecode(cur, false);
+      }
+      if (timelinePlayhead && videoDuration > 0) {
+        const pct = Math.max(0, Math.min(100, (cur / videoDuration) * 100));
+        timelinePlayhead.style.left = `${pct}%`;
+      }
+
+      if (currentMode !== 'cut-middle' && cur >= endTime) {
+        if (loopCheckbox?.checked) {
+          videoPlayer.currentTime = startTime;
+          videoPlayer.play().catch(() => {});
+        } else {
+          videoPlayer.pause();
+        }
+      } else if (currentMode === 'cut-middle' && cur >= startTime && cur < endTime) {
+        // Jump over removed middle section during live preview!
+        videoPlayer.currentTime = endTime;
+      }
+    });
+
+    videoPlayer?.addEventListener('play', () => {
+      if (playSelectionLabel) playSelectionLabel.textContent = i18n.pause;
+    });
+
+    videoPlayer?.addEventListener('pause', () => {
+      if (playSelectionLabel) playSelectionLabel.textContent = i18n.play;
+    });
+
+    playSelectionBtn?.addEventListener('click', () => {
+      if (!videoPlayer) return;
+      if (videoPlayer.paused) {
+        if (
+          currentMode !== 'cut-middle' &&
+          (videoPlayer.currentTime < startTime || videoPlayer.currentTime >= endTime - 0.05)
+        ) {
+          videoPlayer.currentTime = startTime;
+        }
+        videoPlayer.play().catch(() => {});
+      } else {
+        videoPlayer.pause();
+      }
+    });
+
+    resetRangeBtn?.addEventListener('click', () => {
+      startTime = 0;
+      endTime = videoDuration;
+      if (videoPlayer) videoPlayer.currentTime = 0;
+      updateTimelineUI();
+    });
+
+    // Dual-Handle Timeline Pointer Scrubbing
+    function getSecondsFromClientX(clientX: number): number {
+      if (!timelineTrack) return 0;
+      const rect = timelineTrack.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / Math.max(1, rect.width)));
+      const raw = ratio * videoDuration;
+      // Snap timeline pointer drags to clean 0.1s increments (staying within [0, videoDuration])
+      const snapped = Math.round(raw * 10) / 10;
+      return Math.max(0, Math.min(videoDuration, Number(snapped.toFixed(2))));
+    }
+
+    handleStart?.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      activeDragTarget = 'start';
+      handleStart.classList.add('active-drag');
+      handleStart.setPointerCapture(e.pointerId);
+    });
+
+    handleEnd?.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      activeDragTarget = 'end';
+      handleEnd.classList.add('active-drag');
+      handleEnd.setPointerCapture(e.pointerId);
+    });
+
+    timelineSelectionBar?.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      activeDragTarget = 'bar';
+      const clickSec = getSecondsFromClientX(e.clientX);
+      barDragOffset = clickSec - startTime;
+      timelineSelectionBar.setPointerCapture(e.pointerId);
+    });
+
+    timelineTrack?.addEventListener('pointerdown', (e) => {
+      if (e.target === handleStart || e.target === handleEnd || e.target === timelineSelectionBar) return;
+      const clickSec = getSecondsFromClientX(e.clientX);
+      const distStart = Math.abs(clickSec - startTime);
+      const distEnd = Math.abs(clickSec - endTime);
+      if (distStart <= distEnd) {
+        startTime = Math.min(clickSec, endTime - 0.1);
+        if (videoPlayer) videoPlayer.currentTime = startTime;
+      } else {
+        endTime = Math.max(clickSec, startTime + 0.1);
+        if (videoPlayer) videoPlayer.currentTime = endTime;
+      }
+      updateTimelineUI();
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!activeDragTarget) return;
+      const sec = getSecondsFromClientX(e.clientX);
+      if (activeDragTarget === 'start') {
+        startTime = Math.max(0, Math.min(sec, endTime - 0.1));
+        if (videoPlayer) videoPlayer.currentTime = startTime;
+      } else if (activeDragTarget === 'end') {
+        endTime = Math.min(videoDuration, Math.max(sec, startTime + 0.1));
+        if (videoPlayer) videoPlayer.currentTime = endTime;
+      } else if (activeDragTarget === 'bar') {
+        const span = endTime - startTime;
+        let newStart = Math.round((sec - barDragOffset) * 10) / 10;
+        newStart = Math.max(0, Math.min(videoDuration - span, newStart));
+        startTime = Number(newStart.toFixed(2));
+        endTime = Number(Math.min(videoDuration, newStart + span).toFixed(2));
+        if (videoPlayer) videoPlayer.currentTime = startTime;
+      }
+      updateTimelineUI();
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (!activeDragTarget) return;
+      activeDragTarget = null;
+      handleStart?.classList.remove('active-drag');
+      handleEnd?.classList.remove('active-drag');
+    });
+
+    // Keyboard Arrow Nudging (±0.1s) on Handles
+    function adjustStart(delta: number) {
+      startTime = Number(Math.max(0, Math.min(endTime - 0.1, startTime + delta)).toFixed(2));
+      if (videoPlayer) videoPlayer.currentTime = startTime;
+      updateTimelineUI();
+    }
+
+    function adjustEnd(delta: number) {
+      endTime = Number(Math.min(videoDuration, Math.max(startTime + 0.1, endTime + delta)).toFixed(2));
+      if (videoPlayer) videoPlayer.currentTime = endTime;
+      updateTimelineUI();
+    }
+
+    handleStart?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        adjustStart(e.shiftKey ? -1.0 : -0.1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        adjustStart(e.shiftKey ? 1.0 : 0.1);
+      }
+    });
+
+    handleEnd?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        adjustEnd(e.shiftKey ? -1.0 : -0.1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        adjustEnd(e.shiftKey ? 1.0 : 0.1);
+      }
+    });
+
+    // Fine-Tune ±0.1s Buttons & Direct Timecode Inputs
+    nudgeStartMinus?.addEventListener('click', () => adjustStart(-0.1));
+    nudgeStartPlus?.addEventListener('click', () => adjustStart(0.1));
+    nudgeEndMinus?.addEventListener('click', () => adjustEnd(-0.1));
+    nudgeEndPlus?.addEventListener('click', () => adjustEnd(0.1));
+
+    startTimeInput?.addEventListener('change', () => {
+      const parsed = parseTimecode(startTimeInput.value, startTime);
+      startTime = Math.max(0, Math.min(endTime - 0.1, parsed));
+      if (videoPlayer) videoPlayer.currentTime = startTime;
+      updateTimelineUI();
+    });
+
+    endTimeInput?.addEventListener('change', () => {
+      const parsed = parseTimecode(endTimeInput.value, endTime);
+      endTime = Math.min(videoDuration, Math.max(startTime + 0.1, parsed));
+      if (videoPlayer) videoPlayer.currentTime = endTime;
+      updateTimelineUI();
+    });
+
+    let activeProgressTargetSec = 0;
+    let activeProgressBasePct = 10;
+    let activeProgressSpanPct = 85;
+    let currentDisplayPct = 10;
+    let lastEngineErrorDetail = '';
+
+    function showTrimmerError(message: string) {
+      const cleaned = message.replace(/Aborted\([^)]*\)/gi, '').trim();
+      if (trimmerErrorText) {
+        trimmerErrorText.textContent = cleaned || 'Unable to process this file in browser memory. Try Precision mode or a shorter segment.';
+      }
+      trimmerErrorBanner?.classList.remove('hidden');
+      trimmerErrorBanner?.classList.add('flex');
+    }
+
+    function hideTrimmerError() {
+      trimmerErrorBanner?.classList.add('hidden');
+      trimmerErrorBanner?.classList.remove('flex');
+    }
+
+    dismissErrorBtn?.addEventListener('click', hideTrimmerError);
+
+    function setProgressUI(pct: number, statusText?: string) {
+      const clamped = Math.max(10, Math.min(100, Math.round(pct)));
+      currentDisplayPct = Math.max(currentDisplayPct, clamped);
+      if (progressPercentageText) progressPercentageText.textContent = `${currentDisplayPct}%`;
+      if (progressBarFill) progressBarFill.style.width = `${currentDisplayPct}%`;
+      if (progressLogLine && statusText) {
+        progressLogLine.textContent = statusText;
+      }
+    }
+
+    function setProgressStage(basePct: number, spanPct: number, targetSec: number, statusText?: string) {
+      activeProgressBasePct = basePct;
+      activeProgressSpanPct = spanPct;
+      activeProgressTargetSec = Math.max(0.05, Number.isFinite(targetSec) ? targetSec : 1);
+      setProgressUI(basePct, statusText);
+    }
+
+    function isInternalOrNoisyLog(msg: string): boolean {
+      const t = msg.trim();
+      if (!t) return true;
+      if (/^Aborted\(/i.test(t)) return true;
+      if (/^(ffmpeg version|built with|configuration:|lib(av|sw|post)|Metadata:|Duration:|Input #|Output #|Stream #|Stream mapping:|Press \[q\]|frame=.*Lsize=|video:\d+|audio:\d+|\[libx264|\[aac|\[mp3|\[libmp3lame|\[mov,mp4|\[matroska|\[webm)/i.test(t)) {
+        return true;
+      }
+      return false;
+    }
+
+    function parseFfmpegTimeSeconds(msg: string): number | null {
+      const m = msg.match(/time=(\d{2}):(\d{2}):(\d+(?:\.\d+)?)/);
+      if (!m) return null;
+      const hrs = Number(m[1]);
+      const mins = Number(m[2]);
+      const secs = Number(m[3]);
+      if (!Number.isFinite(hrs) || !Number.isFinite(mins) || !Number.isFinite(secs)) return null;
+      return hrs * 3600 + mins * 60 + secs;
+    }
+
+    function handleEngineProgress(progress?: number, timeUs?: number) {
+      let ratio = 0;
+      if (Number.isFinite(timeUs) && (timeUs as number) > 0 && (timeUs as number) < 86400e6 && activeProgressTargetSec > 0) {
+        ratio = Math.min(0.99, ((timeUs as number) / 1_000_000) / activeProgressTargetSec);
+      } else if (Number.isFinite(progress) && (progress as number) > 0 && (progress as number) <= 1) {
+        ratio = Math.min(0.99, progress as number);
+      }
+      if (ratio > 0) {
+        const mapped = activeProgressBasePct + ratio * activeProgressSpanPct;
+        setProgressUI(Math.min(99, mapped));
+      }
+    }
+
+    function handleEngineLog(message?: string) {
+      const raw = String(message || '').trim();
+      if (!raw || /^Aborted\(/i.test(raw)) return;
+
+      const parsedSec = parseFfmpegTimeSeconds(raw);
+      if (parsedSec !== null && parsedSec >= 0) {
+        handleEngineProgress(undefined, parsedSec * 1_000_000);
+        if (progressLogLine && activeProgressTargetSec > 0) {
+          const shownSec = Math.min(activeProgressTargetSec, parsedSec);
+          progressLogLine.textContent = `${formatTimecode(shownSec, false)} / ${formatTimecode(activeProgressTargetSec, false)}`;
+        }
+        return;
+      }
+
+      if (/(no such file|invalid data|conversion failed|unknown encoder|error initializing|not enough memory|unable to)/i.test(raw)) {
+        lastEngineErrorDetail = raw;
+      }
+
+      if (!isInternalOrNoisyLog(raw) && progressLogLine && raw.length <= 96) {
+        progressLogLine.textContent = raw;
+      }
+    }
+
+    // Create Classic Worker FFmpeg Engine (100% compatible with astro dev, astro preview, and GitHub Pages)
+    async function createClassicWorkerEngine(coreURL: string, wasmURL: string): Promise<TrimmerEngine> {
+      return new Promise((resolve, reject) => {
+        let msgId = 1;
+        let initialized = false;
+        const pending = new Map<number, { resolve: (val: any) => void; reject: (err: any) => void }>();
+        const worker = new Worker('/ffmpeg/ffmpeg-classic-worker.js');
+
+        const rejectAll = (err: any) => {
+          pending.forEach((p) => p.reject(err));
+          pending.clear();
+        };
+
+        worker.onerror = (err) => {
+          const errorObj = new Error(err.message || 'FFmpeg worker stopped unexpectedly');
+          rejectAll(errorObj);
+          if (initialized) {
+            ffmpegLoaded = false;
+            ffmpegInstance = null;
+          } else {
+            reject(errorObj);
+          }
+        };
+
+        worker.onmessage = (event) => {
+          const { id, type, data } = event.data || {};
+          if (type === 'LOG') {
+            handleEngineLog(data?.message);
+            return;
+          }
+          if (type === 'PROGRESS') {
+            handleEngineProgress(data?.progress, data?.time);
+            return;
+          }
+          const req = pending.get(id);
+          if (!req) return;
+          pending.delete(id);
+          if (type === 'ERROR') {
+            const msg = String(data || '');
+            req.reject(new Error(/^Aborted\(/i.test(msg.trim()) ? 'FFmpeg runtime reset while processing this clip.' : msg));
+          } else {
+            req.resolve(data);
+          }
+        };
+
+        const send = (type: string, data: any, transfer: Transferable[] = []): Promise<any> =>
+          new Promise((res, rej) => {
+            const id = msgId++;
+            pending.set(id, { resolve: res, reject: rej });
+            worker.postMessage({ id, type, data }, transfer);
+          });
+
+        const engine: TrimmerEngine = {
+          writeFile: (path, data) => {
+            const copy = new Uint8Array(data);
+            return send('WRITE_FILE', { path, data: copy }, [copy.buffer]);
+          },
+          exec: (args) => send('EXEC', { args, timeout: -1 }),
+          probe: (path) => send('PROBE', { path }),
+          readFile: (path) => send('READ_FILE', { path, encoding: 'binary' }),
+          deleteFile: (path) => send('DELETE_FILE', { path }),
+          rename: (oldPath, newPath) => send('RENAME', { oldPath, newPath }),
+        };
+
+        send('LOAD', { coreURL, wasmURL })
+          .then(() => {
+            initialized = true;
+            resolve(engine);
+          })
+          .catch((e) => {
+            worker.terminate();
+            reject(e);
+          });
+      });
+    }
+
+    // Direct Main-Thread UMD Fallback Engine (in case Web Workers are restricted)
+    async function createMainThreadFallbackEngine(coreURL: string, wasmURL: string): Promise<TrimmerEngine> {
+      if (typeof (window as any).createFFmpegCore !== 'function') {
+        await new Promise<void>((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = coreURL;
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Failed to load ffmpeg-core.umd.js'));
+          document.head.appendChild(script);
+        });
+      }
+
+      const wasmResp = await fetch(wasmURL);
+      if (!wasmResp.ok) {
+        throw new Error('Failed to fetch ffmpeg-core.wasm');
+      }
+      const wasmBuffer = await wasmResp.arrayBuffer();
+      const core = await (window as any).createFFmpegCore({
+        wasmBinary: new Uint8Array(wasmBuffer),
+      });
+
+      let probeCollector: string[] | null = null;
+      core.setLogger((data: any) => {
+        const rawMsg = data?.message ? String(data.message) : '';
+        if (!rawMsg || /^Aborted\(/i.test(rawMsg.trim())) return;
+        if (probeCollector) {
+          probeCollector.push(rawMsg);
+          return;
+        }
+        handleEngineLog(rawMsg);
+      });
+      core.setProgress((data: any) => handleEngineProgress(data?.progress, data?.time));
+
+      return {
+        async writeFile(path, data) {
+          core.FS.writeFile(path, new Uint8Array(data));
+          return true;
+        },
+        async exec(args) {
+          core.setTimeout(-1);
+          try {
+            core.exec(...args);
+            return typeof core.ret === 'number' ? core.ret : 0;
+          } finally {
+            core.reset();
+          }
+        },
+        async probe(path) {
+          probeCollector = [];
+          let duration = 0;
+          let hasAudio = false;
+          let hasVideo = false;
+          try {
+            core.setTimeout(-1);
+            core.ffprobe('-v', 'error', '-show_entries', 'format=duration:stream=codec_type', path);
+            core.reset();
+          } finally {
+            for (const line of probeCollector || []) {
+              const trimmed = String(line || '').trim();
+              const m = trimmed.match(/^duration=([0-9.]+)/);
+              if (m) {
+                const val = parseFloat(m[1]);
+                if (Number.isFinite(val) && val > 0) duration = val;
+              }
+              if (trimmed === 'codec_type=audio') hasAudio = true;
+              if (trimmed === 'codec_type=video') hasVideo = true;
+            }
+            probeCollector = null;
+          }
+          return { duration, hasAudio, hasVideo };
+        },
+        async readFile(path) {
+          const out = core.FS.readFile(path, { encoding: 'binary' });
+          return new Uint8Array(out);
+        },
+        async deleteFile(path) {
+          try {
+            core.FS.unlink(path);
+          } catch (_) {}
+          return true;
+        },
+        async rename(oldPath, newPath) {
+          core.FS.rename(oldPath, newPath);
+          return true;
+        },
+      };
+    }
+
+    // Lazy-Load FFmpeg WASM Engine on demand (zero initial render blocking)
+    async function ensureFFmpegLoaded(): Promise<TrimmerEngine> {
+      if (ffmpegInstance && ffmpegLoaded) {
+        return ffmpegInstance;
+      }
+
+      if (progressStatusHeading) {
+        progressStatusHeading.textContent = i18n.loadingEngine;
+      }
+
+      const origin = window.location.origin;
+      const localCoreUmd = `${origin}/ffmpeg/ffmpeg-core.umd.js`;
+      const localWasm = `${origin}/ffmpeg/ffmpeg-core.wasm`;
+
+      let engine: TrimmerEngine;
+      try {
+        engine = await createClassicWorkerEngine(localCoreUmd, localWasm);
+      } catch (workerErr) {
+        console.warn('Classic worker fallback to main-thread WASM:', workerErr);
+        engine = await createMainThreadFallbackEngine(localCoreUmd, localWasm);
+      }
+
+      ffmpegInstance = engine;
+      ffmpegLoaded = true;
+      return engine;
+    }
+
+    // Helper to convert File/Blob to Uint8Array
+    async function fileToUint8Array(file: File): Promise<Uint8Array> {
+      const ab = await file.arrayBuffer();
+      return new Uint8Array(ab);
+    }
+
+    // Execute Client-Side FFmpeg Trimming / Cutting / MP3 Extraction
+    executeTrimBtn?.addEventListener('click', async () => {
+      const sourceFile = loadedFiles[activeFileIndex];
+      if (!sourceFile) return;
+
+      hideTrimmerError();
+      lastEngineErrorDetail = '';
+      currentDisplayPct = 10;
+
+      if (!Number.isFinite(startTime) || startTime < 0) startTime = 0;
+      if (!Number.isFinite(endTime) || endTime <= startTime) {
+        endTime = Math.max(startTime + 0.5, Number.isFinite(videoDuration) && videoDuration > 0 ? videoDuration : 10.0);
+      }
+
+      videoPlayer?.pause();
+      showStep(3);
+
+      const t0 = performance.now();
+      setProgressStage(10, 10, 1, ffmpegLoaded ? i18n.losslessStatus : i18n.loadingEngine);
+
+      const tempFileSet = new Set<string>();
+      const trackTemp = (f: string) => tempFileSet.add(f);
+
+      try {
+        const ffmpeg = await ensureFFmpegLoaded();
+
+        const isMp3Output =
+          currentPreset === 'mp3' || currentMode === 'extract-mp3' || currentMode === 'trim-audio';
+        const isMuted = Boolean(muteAudioToggle?.checked);
+
+        const initialHeading = isMp3Output
+          ? i18n.audioStatus
+          : currentPreset === 'precision'
+            ? i18n.precisionStatus
+            : i18n.losslessStatus;
+
+        if (progressStatusHeading) {
+          progressStatusHeading.textContent = initialHeading;
+        }
+        setProgressUI(18, initialHeading);
+
+        const extMatch = sourceFile.name.match(/\.([a-zA-Z0-9]+)$/);
+        const inputExt = extMatch ? extMatch[1].toLowerCase() : 'mp4';
+        const safeInputExt = ['mp4', 'mov', 'webm', 'mkv', 'avi', 'mp3', 'wav', 'm4a', 'ogg', 'flac'].includes(inputExt)
+          ? inputExt
+          : 'mp4';
+        const inputName = `input.${safeInputExt}`;
+        trackTemp(inputName);
+
+        await ffmpeg.writeFile(inputName, await fileToUint8Array(sourceFile));
+        const inputInfo = await ffmpeg.probe(inputName);
+        const effectiveDuration =
+          inputInfo.duration > 0 ? inputInfo.duration : Math.max(0.5, videoDuration);
+
+        const clampedStart = Math.max(0, Math.min(startTime, Math.max(0, effectiveDuration - 0.1)));
+        const clampedEnd = Math.min(effectiveDuration, Math.max(clampedStart + 0.1, endTime));
+        const targetDuration = Math.max(0.05, Number((clampedEnd - clampedStart).toFixed(3)));
+        const vfEven = 'scale=trunc(iw/2)*2:trunc(ih/2)*2';
+        const hasAudioStream = inputInfo.hasAudio && !isMuted;
+
+        let outputExt = safeInputExt;
+        if (isMp3Output || !inputInfo.hasVideo) {
+          outputExt = 'mp3';
+        } else if (currentPreset === 'precision' || safeInputExt === 'mov' || safeInputExt === 'avi') {
+          outputExt = 'mp4';
+        }
+        let outputName = `output.${outputExt}`;
+        trackTemp(outputName);
+
+        setProgressUI(24, initialHeading);
+
+        const assertExecOk = async (args: string[]) => {
+          const ret = await ffmpeg.exec(args);
+          if (ret !== 0) {
+            throw new Error(lastEngineErrorDetail || 'Video processing failed for this media stream.');
+          }
+          return ret;
+        };
+
+        const runExactRangeTrim = async (s: number, dur: number, outFile: string, presetSpeed: 'ultrafast' | 'veryfast') => {
+          await assertExecOk([
+            '-ss',
+            s.toFixed(3),
+            '-i',
+            inputName,
+            '-t',
+            dur.toFixed(3),
+            '-vf',
+            vfEven,
+            '-c:v',
+            'libx264',
+            '-crf',
+            '18',
+            '-preset',
+            presetSpeed,
+            '-pix_fmt',
+            'yuv420p',
+            ...(hasAudioStream ? ['-c:a', 'aac', '-b:a', '192k'] : ['-an']),
+            '-shortest',
+            '-movflags',
+            '+faststart',
+            outFile,
+          ]);
+        };
+
+        let expectedOutDuration = targetDuration;
+        let finalOutName = outputName;
+
+        if (isMp3Output || !inputInfo.hasVideo) {
+          // Exact Audio Extraction / MP3 Trimming
+          outputExt = 'mp3';
+          outputName = 'output.mp3';
+          finalOutName = outputName;
+          trackTemp(outputName);
+
+          if (currentMode === 'cut-middle') {
+            const leftDur = clampedStart > 0.05 ? clampedStart : 0;
+            const rightDur = effectiveDuration - clampedEnd > 0.05 ? effectiveDuration - clampedEnd : 0;
+            expectedOutDuration = Math.max(0.1, Number((leftDur + rightDur).toFixed(3)));
+            setProgressStage(25, 72, expectedOutDuration, i18n.audioStatus);
+
+            if (leftDur > 0 && rightDur > 0) {
+              await assertExecOk([
+                '-i',
+                inputName,
+                '-filter_complex',
+                `[0:a]atrim=start=0:end=${clampedStart.toFixed(3)},asetpts=PTS-STARTPTS[a0];[0:a]atrim=start=${clampedEnd.toFixed(3)}:end=${effectiveDuration.toFixed(3)},asetpts=PTS-STARTPTS[a1];[a0][a1]concat=n=2:v=0:a=1[a]`,
+                '-map',
+                '[a]',
+                '-vn',
+                '-c:a',
+                'libmp3lame',
+                '-q:a',
+                '2',
+                outputName,
+              ]);
+            } else {
+              const singleStart = leftDur > 0 ? 0 : clampedEnd;
+              const singleDur = leftDur > 0 ? leftDur : Math.max(0.1, rightDur);
+              await assertExecOk([
+                '-ss',
+                singleStart.toFixed(3),
+                '-i',
+                inputName,
+                '-t',
+                singleDur.toFixed(3),
+                '-vn',
+                '-c:a',
+                'libmp3lame',
+                '-q:a',
+                '2',
+                outputName,
+              ]);
+            }
+          } else {
+            setProgressStage(25, 72, targetDuration, i18n.audioStatus);
+            await assertExecOk([
+              '-ss',
+              clampedStart.toFixed(3),
+              '-i',
+              inputName,
+              '-t',
+              targetDuration.toFixed(3),
+              '-vn',
+              '-c:a',
+              'libmp3lame',
+              '-q:a',
+              '2',
+              outputName,
+            ]);
+          }
+        } else if (currentMode === 'cut-middle') {
+          // Cut Out Middle Section: Keep [0 -> clampedStart] + [clampedEnd -> effectiveDuration]
+          const leftDur = clampedStart > 0.05 ? clampedStart : 0;
+          const rightDur = effectiveDuration - clampedEnd > 0.05 ? effectiveDuration - clampedEnd : 0;
+          expectedOutDuration = Math.max(0.1, Number((leftDur + rightDur).toFixed(3)));
+
+          const runExactMiddleFilter = async (targetFile: string, speed: 'ultrafast' | 'veryfast') => {
+            if (leftDur > 0 && rightDur > 0) {
+              const fc = hasAudioStream
+                ? `[0:v]trim=start=0:end=${clampedStart.toFixed(3)},setpts=PTS-STARTPTS[v0];[0:a]atrim=start=0:end=${clampedStart.toFixed(3)},asetpts=PTS-STARTPTS[a0];[0:v]trim=start=${clampedEnd.toFixed(3)}:end=${effectiveDuration.toFixed(3)},setpts=PTS-STARTPTS[v1];[0:a]atrim=start=${clampedEnd.toFixed(3)}:end=${effectiveDuration.toFixed(3)},asetpts=PTS-STARTPTS[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[vcat][a];[vcat]${vfEven}[v]`
+                : `[0:v]trim=start=0:end=${clampedStart.toFixed(3)},setpts=PTS-STARTPTS[v0];[0:v]trim=start=${clampedEnd.toFixed(3)}:end=${effectiveDuration.toFixed(3)},setpts=PTS-STARTPTS[v1];[v0][v1]concat=n=2:v=1:a=0[vcat];[vcat]${vfEven}[v]`;
+              await assertExecOk([
+                '-i',
+                inputName,
+                '-filter_complex',
+                fc,
+                '-map',
+                '[v]',
+                ...(hasAudioStream ? ['-map', '[a]', '-c:a', 'aac', '-b:a', '192k'] : ['-an']),
+                '-c:v',
+                'libx264',
+                '-crf',
+                '18',
+                '-preset',
+                speed,
+                '-pix_fmt',
+                'yuv420p',
+                '-movflags',
+                '+faststart',
+                targetFile,
+              ]);
+            } else {
+              const singleStart = leftDur > 0 ? 0 : clampedEnd;
+              const singleDur = leftDur > 0 ? leftDur : Math.max(0.1, rightDur);
+              await runExactRangeTrim(singleStart, singleDur, targetFile, speed);
+            }
+          };
+
+          if (currentPreset === 'precision') {
+            outputExt = 'mp4';
+            finalOutName = 'output_exact.mp4';
+            trackTemp(finalOutName);
+            setProgressStage(25, 72, expectedOutDuration, i18n.precisionStatus);
+            await runExactMiddleFilter(finalOutName, 'veryfast');
+          } else {
+            const partFiles: string[] = [];
+            if (leftDur > 0) {
+              const p1 = `part1.${outputExt}`;
+              trackTemp(p1);
+              setProgressStage(24, 15, leftDur, i18n.losslessStatus);
+              await ffmpeg.exec([
+                '-ss',
+                '0',
+                '-i',
+                inputName,
+                '-t',
+                leftDur.toFixed(3),
+                '-c',
+                'copy',
+                ...(isMuted ? ['-an'] : []),
+                '-avoid_negative_ts',
+                'make_zero',
+                p1,
+              ]);
+              partFiles.push(p1);
+            }
+            if (rightDur > 0) {
+              const p2 = `part2.${outputExt}`;
+              trackTemp(p2);
+              setProgressStage(39, 15, rightDur, i18n.losslessStatus);
+              await ffmpeg.exec([
+                '-ss',
+                clampedEnd.toFixed(3),
+                '-i',
+                inputName,
+                '-t',
+                rightDur.toFixed(3),
+                '-c',
+                'copy',
+                ...(isMuted ? ['-an'] : []),
+                '-avoid_negative_ts',
+                'make_zero',
+                p2,
+              ]);
+              partFiles.push(p2);
+            }
+
+            if (partFiles.length === 1) {
+              try {
+                await ffmpeg.rename(partFiles[0], outputName);
+              } catch (_) {}
+            } else if (partFiles.length === 2) {
+              const concatList = partFiles.map((f) => `file ${f}`).join('\n');
+              trackTemp('concat.txt');
+              await ffmpeg.writeFile('concat.txt', new TextEncoder().encode(concatList));
+              setProgressStage(54, 6, expectedOutDuration, i18n.losslessStatus);
+              await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat.txt', '-c', 'copy', outputName]);
+            }
+
+            // Verify stream-copy cut-middle output duration matches expected length; if keyframes shifted it, auto-refine cleanly!
+            const probeOut = await ffmpeg.probe(outputName);
+            const durDiff = probeOut.duration > 0 ? Math.abs(probeOut.duration - expectedOutDuration) : Infinity;
+            let rawCopy: Uint8Array | null = null;
+            try {
+              rawCopy = await ffmpeg.readFile(outputName);
+            } catch (_) {}
+
+            if (
+              !rawCopy ||
+              rawCopy.byteLength < 64 ||
+              probeOut.duration <= 0 ||
+              (durDiff > 0.08 && expectedOutDuration <= 90) ||
+              durDiff > 0.5
+            ) {
+              if (progressStatusHeading) progressStatusHeading.textContent = i18n.precisionStatus;
+              outputExt = 'mp4';
+              finalOutName = 'output_exact.mp4';
+              trackTemp(finalOutName);
+              setProgressStage(60, 38, expectedOutDuration, i18n.precisionStatus);
+              await runExactMiddleFilter(finalOutName, 'ultrafast');
+            }
+          }
+        } else if (currentPreset === 'precision') {
+          // Frame-Accurate Precision Cut Engine (-ss -i -t with exact frame output)
+          outputExt = 'mp4';
+          finalOutName = 'output_exact.mp4';
+          trackTemp(finalOutName);
+          setProgressStage(25, 72, targetDuration, i18n.precisionStatus);
+          await runExactRangeTrim(clampedStart, targetDuration, finalOutName, 'veryfast');
+        } else {
+          // Instant Lossless Stream-Copy Engine with Automatic Exact-Duration Keyframe Verification
+          setProgressStage(25, 30, targetDuration, i18n.losslessStatus);
+          await ffmpeg.exec([
+            '-ss',
+            clampedStart.toFixed(3),
+            '-i',
+            inputName,
+            '-t',
+            targetDuration.toFixed(3),
+            '-c',
+            'copy',
+            ...(isMuted ? ['-an'] : []),
+            '-avoid_negative_ts',
+            'make_zero',
+            outputName,
+          ]);
+
+          let copyBytes: Uint8Array | null = null;
+          try {
+            copyBytes = await ffmpeg.readFile(outputName);
+          } catch (_) {
+            copyBytes = null;
+          }
+
+          const probeOut = await ffmpeg.probe(outputName);
+          const durDiff = probeOut.duration > 0 ? Math.abs(probeOut.duration - targetDuration) : Infinity;
+
+          // If keyframe snapping made the stream-copied clip longer/shorter than selected (common on small cuts),
+          // automatically perform a fast frame-accurate H.264 cut so the output duration matches the timeline selection!
+          if (
+            !copyBytes ||
+            copyBytes.byteLength < 64 ||
+            probeOut.duration <= 0 ||
+            (durDiff > 0.08 && targetDuration <= 90) ||
+            durDiff > 0.5
+          ) {
+            if (progressStatusHeading) progressStatusHeading.textContent = i18n.precisionStatus;
+            outputExt = 'mp4';
+            finalOutName = 'output_exact.mp4';
+            trackTemp(finalOutName);
+            setProgressStage(55, 42, targetDuration, i18n.precisionStatus);
+            await runExactRangeTrim(clampedStart, targetDuration, finalOutName, 'ultrafast');
+          }
+        }
+
+        setProgressUI(100, i18n.zeroLoss);
+
+        const outData = await ffmpeg.readFile(finalOutName);
+        if (!outData || outData.byteLength < 32) {
+          throw new Error(lastEngineErrorDetail || 'Generated output clip was empty.');
+        }
+        const finalProbe = await ffmpeg.probe(finalOutName);
+
+        const mimeMap: Record<string, string> = {
+          mp4: 'video/mp4',
+          webm: 'video/webm',
+          mkv: 'video/x-matroska',
+          mov: 'video/quicktime',
+          mp3: 'audio/mpeg',
+        };
+        const outBlob = new Blob([new Uint8Array(outData)], { type: mimeMap[outputExt] || 'video/mp4' });
+
+        if (resultObjectUrl) {
+          URL.revokeObjectURL(resultObjectUrl);
+        }
+        resultObjectUrl = URL.createObjectURL(outBlob);
+
+        const elapsedSec = ((performance.now() - t0) / 1000).toFixed(2);
+        if (resultSpeedBadge) {
+          resultSpeedBadge.textContent = `${elapsedSec}s`;
+        }
+
+        const measuredOutDuration =
+          finalProbe.duration > 0 ? finalProbe.duration : expectedOutDuration;
+
+        const updateSummaryText = (displayDur: number) => {
+          if (beforeAfterSummaryText) {
+            beforeAfterSummaryText.textContent = `${i18n.original}: ${formatTimecode(effectiveDuration, false)} (${formatMegabytes(sourceFile.size)}) → ${i18n.trimmed}: ${formatTimecode(displayDur, false)} (${formatMegabytes(outBlob.size)}) — ${i18n.zeroLoss}`;
+          }
+        };
+        updateSummaryText(measuredOutDuration);
+
+        const baseName = sourceFile.name.replace(/\.[^/.]+$/, '');
+        const downloadFileName = `${baseName}-trimmed.${outputExt}`;
+
+        if (downloadOutputLink) {
+          downloadOutputLink.href = resultObjectUrl;
+          downloadOutputLink.download = downloadFileName;
+        }
+
+        if (downloadBtnLabel) {
+          downloadBtnLabel.textContent = outputExt === 'mp3' ? i18n.dlAudio : i18n.dlVideo;
+        }
+
+        if (outputExt === 'mp3') {
+          resultVideoPreview?.classList.add('hidden');
+          resultAudioPreview?.classList.remove('hidden');
+          if (resultAudioPreview) {
+            resultAudioPreview.onloadedmetadata = () => {
+              if (Number.isFinite(resultAudioPreview.duration) && resultAudioPreview.duration > 0) {
+                updateSummaryText(resultAudioPreview.duration);
+              }
+            };
+            resultAudioPreview.src = resultObjectUrl;
+            resultAudioPreview.load();
+          }
+        } else {
+          resultAudioPreview?.classList.add('hidden');
+          resultVideoPreview?.classList.remove('hidden');
+          if (resultVideoPreview) {
+            resultVideoPreview.onloadedmetadata = () => {
+              if (Number.isFinite(resultVideoPreview.duration) && resultVideoPreview.duration > 0) {
+                updateSummaryText(resultVideoPreview.duration);
+              }
+            };
+            resultVideoPreview.src = resultObjectUrl;
+            resultVideoPreview.load();
+          }
+        }
+
+        showStep(4);
+      } catch (err) {
+        console.error('FFmpeg trimming error:', err);
+        const errMsg = err instanceof Error ? err.message : String(err || '');
+        showTrimmerError(errMsg);
+        showStep(2);
+      } finally {
+        if (ffmpegInstance) {
+          for (const tf of tempFileSet) {
+            try {
+              await ffmpegInstance.deleteFile(tf);
+            } catch (_) {}
+          }
+        }
+      }
+    });
+
+    // Step 4 Navigation Buttons
+    backToTimelineBtn?.addEventListener('click', () => {
+      resultVideoPreview?.pause();
+      resultAudioPreview?.pause();
+      showStep(2);
+    });
+
+    trimNewFileBtn?.addEventListener('click', () => {
+      resultVideoPreview?.pause();
+      resultAudioPreview?.pause();
+      loadedFiles = [];
+      showStep(1);
+    });
+  })();
+</script>

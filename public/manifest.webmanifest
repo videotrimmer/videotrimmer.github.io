@@ -1,0 +1,32 @@
+{
+  "name": "VideoTrimmer — Free Online Video Cutter",
+  "short_name": "VideoTrimmer",
+  "description": "Trim and cut MP4, MOV, and WebM videos instantly 100% locally in your browser with zero uploads and zero quality loss.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7FBF2",
+  "theme_color": "#3A5465",
+  "categories": ["multimedia", "video", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
